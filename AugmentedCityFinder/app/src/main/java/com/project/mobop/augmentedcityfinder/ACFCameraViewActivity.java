@@ -13,9 +13,9 @@ import android.widget.TextView;
 /**
  * Created by Nils on 08.03.2015.
  */
-public class CameraViewActivity extends Activity implements View.OnTouchListener,
+public class ACFCameraViewActivity extends Activity implements View.OnTouchListener,
         View.OnClickListener{
-    final private String TAG = "CameraViewActivity";
+    final private String TAG = "ACFCameraViewActivity";
     private FrameLayout background, foreground;
     private CameraView cameraView;
     private ImageView iv_city_pointer;
