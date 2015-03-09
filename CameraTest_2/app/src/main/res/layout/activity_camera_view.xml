@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/background">
+
+    <view
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        class="com.mobop.cameratest.CameraView"
+        android:id="@+id/camera_preview" />
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/foreground">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/tv_orientation_label"
+            android:id="@+id/tv_orientation"
+            android:layout_gravity="top|center_horizontal"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="#ffff0000" />
+    </FrameLayout>
+
+</FrameLayout>
