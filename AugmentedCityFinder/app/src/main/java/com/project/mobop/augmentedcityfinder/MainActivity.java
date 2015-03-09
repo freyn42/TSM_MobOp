@@ -1,6 +1,7 @@
 package com.project.mobop.augmentedcityfinder;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -121,4 +122,9 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    public void startCameraViewActivity(View v){
+        Log.d("MainActivity", "Start Camera Button clicked!");
+        Intent intent = new Intent(this, CameraViewActivity.class);
+        startActivity(intent);
+    }
 }
