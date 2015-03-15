@@ -20,6 +20,7 @@ public class ACFLocationListener implements LocationListener {
             "temporarily unavailable", "available" };
     private Activity context;
     private TextView tv_location;
+    private double latitude, longitude;
 
     public ACFLocationListener(Activity appContext){
         context = appContext;
@@ -28,6 +29,8 @@ public class ACFLocationListener implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         Log.d("MainActivity", "\nLocation: " + (location == null ? "[unknown]" : location.toString()));
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
         if(tv_location == null) {
             tv_location = (TextView) ((MainActivity) context).getMainFragment().getTvLocation();
         }
@@ -48,5 +51,13 @@ public class ACFLocationListener implements LocationListener {
     @Override
     public void onProviderDisabled(String provider) {
         Log.d("MainActivity","\nProvider disabled: " + provider);
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
     }
 }

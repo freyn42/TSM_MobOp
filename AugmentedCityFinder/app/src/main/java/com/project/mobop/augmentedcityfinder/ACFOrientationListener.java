@@ -17,6 +17,7 @@ public class ACFOrientationListener implements SensorEventListener {
     private float[] gravity = null;
     private float[] geomagnetic = null;
     private float gO[] = new float[3];
+    private float azimuth, pitch, roll;
     private String direction = "";
     private TextView tv_direction = null;
 
@@ -47,6 +48,9 @@ public class ACFOrientationListener implements SensorEventListener {
                     SensorManager.remapCoordinateSystem (R_in, SensorManager.AXIS_X, SensorManager.AXIS_Z, R_out);
                     SensorManager.getOrientation (R_out, gO);
                 }
+                azimuth = gO[0];
+                pitch = gO[1];
+                roll = gO[2];
                 double degrees = Math.toDegrees(gO[0]);
                 degrees = degrees > 0 ? degrees : 360 + degrees;
                 String directions[] = {"N", "NE", "E", "SE", "S", "SW", "W", "NW", "N"};
@@ -84,5 +88,17 @@ public class ACFOrientationListener implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    public float getAzimuth() {
+        return azimuth;
+    }
+
+    public float getPitch() {
+        return pitch;
+    }
+
+    public float getRoll() {
+        return roll;
     }
 }

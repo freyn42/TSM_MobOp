@@ -45,5 +45,12 @@ public class ACFLocationController {
         locationMgr.removeUpdates(locationListener);
     }
 
+    public double getLatitude() {
+        return locationListener.getLatitude();
+    }
+
+    public double getLongitude() {
+        return locationListener.getLongitude();
+    }
 
 }
