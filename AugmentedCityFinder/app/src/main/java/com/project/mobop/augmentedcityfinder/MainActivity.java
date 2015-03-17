@@ -44,15 +44,15 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        locationController.requestLocationUpdates(15000, 1);
-        orientationController.registerListener();
+        //locationController.requestLocationUpdates(15000, 1);
+        //orientationController.registerListener();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        locationController.unregisterListener();
-        orientationController.unregisterListener();
+        //locationController.unregisterListener();
+        //orientationController.unregisterListener();
     }
 
     @Override

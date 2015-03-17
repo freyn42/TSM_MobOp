@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import java.util.Observable;
+
 /**
  * Created by thomaso on 03.03.15.
  */
-public class ACFLocationListener implements LocationListener {
+public class ACFLocationListener extends Observable implements LocationListener {
 
     private static final String[] ACCURACY = { "invalid", "n/a", "fine",
             "coarse" };
@@ -19,8 +21,6 @@ public class ACFLocationListener implements LocationListener {
     private static final String[] STATUS = { "out of service",
             "temporarily unavailable", "available" };
     private Activity context;
-    private TextView tv_location;
-    private double latitude, longitude;
 
     public ACFLocationListener(Activity appContext){
         context = appContext;
@@ -29,12 +29,8 @@ public class ACFLocationListener implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         Log.d("MainActivity", "\nLocation: " + (location == null ? "[unknown]" : location.toString()));
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
-        if(tv_location == null) {
-            tv_location = (TextView) ((MainActivity) context).getMainFragment().getTvLocation();
-        }
-        tv_location.setText(location.toString());
+        setChanged();
+        notifyObservers(location);
     }
 
     @Override
@@ -53,11 +49,4 @@ public class ACFLocationListener implements LocationListener {
         Log.d("MainActivity","\nProvider disabled: " + provider);
     }
 
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
 }

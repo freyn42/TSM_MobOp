@@ -34,15 +34,7 @@ public class ACFOrientationController {
         sensorMgr.unregisterListener(orientationListener,magneticFieldSensor);
     }
 
-    public float getAzimuth() {
-        return orientationListener.getAzimuth();
-    }
-
-    public float getPitch() {
-        return orientationListener.getPitch();
-    }
-
-    public float getRoll() {
-        return orientationListener.getRoll();
+    public ACFOrientationListener getOrientationListener() {
+        return orientationListener;
     }
 }

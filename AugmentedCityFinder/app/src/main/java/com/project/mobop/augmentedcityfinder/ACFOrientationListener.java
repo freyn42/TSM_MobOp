@@ -8,18 +8,20 @@ import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
+
 /**
  * Created by thomaso on 03.03.15.
  */
-public class ACFOrientationListener implements SensorEventListener {
+public class ACFOrientationListener extends Observable implements SensorEventListener{
 
     private Activity context;
     private float[] gravity = null;
     private float[] geomagnetic = null;
     private float gO[] = new float[3];
-    private float azimuth, pitch, roll;
-    private String direction = "";
-    private TextView tv_direction = null;
+    private ACFOrientation orientation = new ACFOrientation();
 
     public ACFOrientationListener(Activity appContext){
         context = appContext;
@@ -27,62 +29,46 @@ public class ACFOrientationListener implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        new CalculateDirectionTask().execute(event);
+        final SensorEvent event_final = event;
+        Runnable runnable = new Runnable(){
+            @Override
+            public void run() {
+                if (event_final.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+                    gravity = lowPass(event_final.values.clone(), gravity);
+                } else if (event_final.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+                    geomagnetic = lowPass(event_final.values.clone(), geomagnetic);
+                }
+
+                float R_in[] = new float[9];
+                float R_out[] = new float[9];
+
+                if (geomagnetic != null && gravity != null) {
+                    if (SensorManager.getRotationMatrix(R_in, null, gravity, geomagnetic)) {
+                        SensorManager.remapCoordinateSystem(R_in, SensorManager.AXIS_X, SensorManager.AXIS_Z, R_out);
+                        SensorManager.getOrientation(R_out, gO);
+                    }
+                    orientation.setAzimuth(gO[0]);
+                    orientation.setPitch(gO[1]);
+                    orientation.setRoll(gO[2]);
+                }
+            }
+
+            private float[] lowPass(float[] input, float[] output) {
+                float ALPHA = 0.25f;
+                if ( output == null ) return input;
+                for ( int i=0; i<input.length; i++ ) {
+                    output[i] = output[i] + ALPHA * (input[i] - output[i]);
+                }
+                return output;
+            }
+        };
+        new Thread(runnable).start();
+        setChanged();
+        notifyObservers(orientation);
     }
 
-    private class CalculateDirectionTask extends AsyncTask<SensorEvent,Void,String>{
-        @Override
-        protected String doInBackground(SensorEvent... event) {
-            if (event[0].sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-                gravity = lowPass(event[0].values.clone(), gravity);
-            }
-            else if (event[0].sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-                geomagnetic = lowPass(event[0].values.clone(), geomagnetic);
-            }
-
-            float R_in[] = new float[9];
-            float R_out[] = new float[9];
-
-            if (geomagnetic != null && gravity != null) {
-                if (SensorManager.getRotationMatrix(R_in, null, gravity, geomagnetic)) {
-                    SensorManager.remapCoordinateSystem (R_in, SensorManager.AXIS_X, SensorManager.AXIS_Z, R_out);
-                    SensorManager.getOrientation (R_out, gO);
-                }
-                azimuth = gO[0];
-                pitch = gO[1];
-                roll = gO[2];
-                double degrees = Math.toDegrees(gO[0]);
-                degrees = degrees > 0 ? degrees : 360 + degrees;
-                String directions[] = {"N", "NE", "E", "SE", "S", "SW", "W", "NW", "N"};
-                String dir = directions[(int) Math.round(((degrees % 360) / 45))];
-                if (!(direction.equalsIgnoreCase(dir))) {
-                    direction = dir;
-                    return dir;
-                } else {
-                    return null;
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            if(result != null){
-                if(tv_direction == null) {
-                    tv_direction = (TextView) ((MainActivity) context).getMainFragment().getTvDirection();
-                }
-                tv_direction.setText(result);
-            }
-        }
-
-        private float[] lowPass(float[] input, float[] output) {
-            float ALPHA = 0.25f;
-            if ( output == null ) return input;
-            for ( int i=0; i<input.length; i++ ) {
-                output[i] = output[i] + ALPHA * (input[i] - output[i]);
-            }
-            return output;
-        }
+    public ACFOrientation getUpdate(){
+        return orientation;
     }
 
     @Override
@@ -90,15 +76,4 @@ public class ACFOrientationListener implements SensorEventListener {
 
     }
 
-    public float getAzimuth() {
-        return azimuth;
-    }
-
-    public float getPitch() {
-        return pitch;
-    }
-
-    public float getRoll() {
-        return roll;
-    }
 }

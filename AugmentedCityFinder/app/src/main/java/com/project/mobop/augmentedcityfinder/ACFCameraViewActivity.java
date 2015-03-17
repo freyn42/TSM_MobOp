@@ -1,6 +1,7 @@
 package com.project.mobop.augmentedcityfinder;
 
 import android.app.Activity;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -10,18 +11,28 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Observable;
+import java.util.Observer;
+
 /**
  * Created by Nils on 08.03.2015.
  */
-public class ACFCameraViewActivity extends Activity implements View.OnTouchListener,
+public class ACFCameraViewActivity extends Activity implements View.OnTouchListener,Observer,
         View.OnClickListener{
     final private String TAG = "ACFCameraViewActivity";
     private FrameLayout background, foreground;
     private CameraView cameraView;
     private ImageView iv_city_pointer;
-    private TextView tv_orientation;
+    private TextView tv_orientation,tv_location;
     private int view_width, view_height, city_pointer_width, city_pointer_height;
     private int touch_x, touch_y, city_pointer_margin_left, city_pointer_margin_top;
+
+    private ACFOrientationController orientationController;
+    private Observable orientationObservable;
+
+    private ACFLocationController locationController;
+    private Observable locationObservable;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +59,17 @@ public class ACFCameraViewActivity extends Activity implements View.OnTouchListe
                 ", City pointer height: " + String.valueOf(city_pointer_height));
 
         tv_orientation = (TextView) findViewById(R.id.tv_orientation);
+        tv_location = (TextView) findViewById(R.id.tv_location);
+
+        orientationController = new ACFOrientationController(this);
+        orientationController.registerListener();
+        orientationObservable = orientationController.getOrientationListener();
+        orientationObservable.addObserver(this);
+
+        locationController = new ACFLocationController(this);
+        locationController.requestLocationUpdates(15000, 1);
+        locationObservable = locationController.getLocationListener();
+        locationObservable.addObserver(this);
     }
 
 
@@ -85,5 +107,16 @@ public class ACFCameraViewActivity extends Activity implements View.OnTouchListe
         Log.d(TAG, "onClick");
         foreground.removeView(v);
         tv_orientation.setText("X: Gone, Y: Gone");
+    }
+
+    @Override
+    public void update(Observable observable, Object data) {
+        if(observable == orientationObservable){
+            ACFOrientation orientation = (ACFOrientation)data;
+            tv_orientation.setText("Azimuth: " + orientation.getAzimuth() + ", Pitch: " + orientation.getPitch() + ", Roll: " + orientation.getRoll());
+        } else if(observable == locationObservable){
+            Location location = (Location)data;
+            tv_location.setText("Latitude:" + location.getLatitude() + ", Longitude: " + location.getLongitude());
+        }
     }
 }
