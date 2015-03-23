@@ -1,6 +1,5 @@
 package com.project.mobop.augmentedcityfinder;
 
-import android.app.Activity;
 import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;
@@ -12,12 +11,12 @@ import android.widget.Toast;
  * Created by thomaso on 03.03.15.
  */
 public class ACFLocationController {
-    private Activity context;
+    private Context context;
     private LocationManager locationMgr;
     private String bestLocationProvider;
     private ACFLocationListener locationListener;
 
-    public ACFLocationController(Activity appContext){
+    public ACFLocationController(Context appContext){
         context = appContext;
         locationMgr = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
