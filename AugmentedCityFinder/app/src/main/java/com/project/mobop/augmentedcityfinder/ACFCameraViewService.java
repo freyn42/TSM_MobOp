@@ -11,6 +11,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
 
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -34,9 +35,7 @@ public class ACFCameraViewService extends Service implements Observer {
     private Location location;
     private ACFOrientation orientation;
 
-    private ACFCity berlin = new ACFCity("Berlin", "Germany", "Europe", 13.408333, 52.518611);
-    private ACFCity stockholm = new ACFCity("Stockholm", "Sweden", "Europe", 18.05, 59.325);
-    private ACFCity[] cities = {berlin, stockholm};
+    private List<ACFCity> citiesList;
 
     private double screenWidthMillimeter, screenHeightMillimeter;
     private int screenWidthPixel, screenHeightPixel;
@@ -162,6 +161,8 @@ public class ACFCameraViewService extends Service implements Observer {
     }
 
     private void loadCities() {
+        ACFCitiesDatabaseController citiesDBCtrl = new ACFCitiesDatabaseController(this);
+        citiesList = citiesDBCtrl.getAllCities();
     }
 
     @Override
@@ -170,7 +171,6 @@ public class ACFCameraViewService extends Service implements Observer {
 
         if (observable == orientationObservable){
             orientation = (ACFOrientation) data;
-
             orientationCalculations();
         }else if (observable == locationObservable){
             location = (Location) data;
@@ -179,30 +179,30 @@ public class ACFCameraViewService extends Service implements Observer {
     }
 
     private void orientationCalculations(){
-        for (int i=0; i<cities.length; i++){
-            if (location != null){
-                double bearing = location.bearingTo(cities[i].getLocation());
+        if (location != null){
+            for (ACFCity city : citiesList){
+                double bearing = location.bearingTo(city.getLocation());
                 if (bearing > 180){
                     bearing = bearing - 360;
                 }
                 double azimuth = Math.toDegrees(orientation.getAzimuth());
                 double deltaAzimuth = azimuth - bearing;
-                cities[i].setDeltaAzimuth(deltaAzimuth);
-                cities[i].setDeltaPitch(0);
+                city.setDeltaAzimuth(deltaAzimuth);
+                city.setDeltaPitch(0);
 
                 if (Math.abs(deltaAzimuth) < (horizontalViewAngle / 2)){
-                    cities[i].setInView(true);
+                    city.setInView(true);
                 }else{
-                    cities[i].setInView(false);
+                    city.setInView(false);
                 }
 
-                if (cities[i].isInView()){
+                if (city.isInView()){
                     int leftMargin = (int) ((screenWidthPixel / 2) +
-                            (horizontalPixelDegree * ((int) -cities[i].getDeltaAzimuth())) - 25);
-                    cities[i].setLeftMargin(leftMargin);
+                            (horizontalPixelDegree * ((int) -city.getDeltaAzimuth())) - 25);
+                    city.setLeftMargin(leftMargin);
 
                     int topMargin = (int) ((screenHeightPixel / 2) - 25);
-                    cities[i].setTopMargin(topMargin);
+                    city.setTopMargin(topMargin);
                 }
             }
         }
@@ -213,9 +213,9 @@ public class ACFCameraViewService extends Service implements Observer {
     }
 
     private void locationCalculations(){
-        for (int i=0; i<cities.length; i++){
+        for (ACFCity city : citiesList){
             if (location != null){
-                cities[i].setDistance(location.distanceTo(cities[i].getLocation()));
+                city.setDistance(location.distanceTo(city.getLocation()));
             }
         }
 
@@ -238,7 +238,7 @@ public class ACFCameraViewService extends Service implements Observer {
         return orientation;
     }
 
-    public ACFCity[] getCities(){
-        return cities;
+    public List<ACFCity> getCitiesList() {
+        return citiesList;
     }
 }
