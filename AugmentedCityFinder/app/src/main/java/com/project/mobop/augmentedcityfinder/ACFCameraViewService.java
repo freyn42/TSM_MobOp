@@ -2,6 +2,7 @@ package com.project.mobop.augmentedcityfinder;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Binder;
 import android.os.IBinder;
@@ -43,6 +44,10 @@ public class ACFCameraViewService extends Service implements Observer {
     private double horizontalViewAngle, verticalViewAngle;
     private final double DISTANCE_TO_VIEWER = 300; // Millimeter
 
+    private final String PREFS_LAST_KNOWN_LOCATION = "LastKnownLocation";
+    private final String PREFS_LONGITUDE = "Longitude";
+    private final String PREFS_LATITUDE = "Latitude";
+
     public ACFCameraViewService() {
     }
 
@@ -58,6 +63,15 @@ public class ACFCameraViewService extends Service implements Observer {
     @Override
     public void onCreate() {
         Log.d(TAG, "onCreate");
+
+        super.onCreate();
+
+        SharedPreferences prefs = getSharedPreferences(PREFS_LAST_KNOWN_LOCATION, 0);
+        if (prefs.contains(PREFS_LATITUDE)){
+            location = new Location("MyLocation");
+            location.setLatitude(prefs.getFloat(PREFS_LATITUDE, 0));
+            location.setLongitude(prefs.getFloat(PREFS_LONGITUDE, 0));
+        }
 
         DisplayMetrics dm = new DisplayMetrics();
         WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
@@ -84,15 +98,13 @@ public class ACFCameraViewService extends Service implements Observer {
         verticalPixelDegree = (int) (screenHeightPixel / verticalViewAngle);
         Log.d(TAG, "horizontalPixelDegree: " + horizontalPixelDegree +
                 ", verticalPixelDegree: " + verticalPixelDegree);
-
-
-        super.onCreate();
     }
 
     @Override
     public IBinder onBind(Intent intent) {
         Log.d(TAG, "onBind");
 
+        loadCities();
         registerOrientation();
         registerLocation();
 
@@ -106,6 +118,14 @@ public class ACFCameraViewService extends Service implements Observer {
 
         unregisterOrientation();
         unregisterLocation();
+
+        if (location != null){
+            SharedPreferences prefs = getSharedPreferences(PREFS_LAST_KNOWN_LOCATION, 0);
+            SharedPreferences.Editor prefsEdit = prefs.edit();
+            prefsEdit.putFloat(PREFS_LONGITUDE, (float) location.getLongitude());
+            prefsEdit.putFloat(PREFS_LATITUDE, (float) location.getLatitude());
+            prefsEdit.commit();
+        }
 
         return super.onUnbind(intent);
     }
@@ -139,6 +159,9 @@ public class ACFCameraViewService extends Service implements Observer {
     private void unregisterLocation(){
         locationObservable.deleteObserver(this);
         locationController.unregisterListener();
+    }
+
+    private void loadCities() {
     }
 
     @Override
