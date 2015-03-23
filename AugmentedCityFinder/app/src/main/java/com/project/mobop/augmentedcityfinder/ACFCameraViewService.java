@@ -88,8 +88,8 @@ public class ACFCameraViewService extends Service implements Observer {
                 ", screen width: " + screenWidthMillimeter +
                 ", screen height: " + screenHeightMillimeter);
 
-        horizontalViewAngle = 2 * Math.toDegrees(2 * Math.atan2(screenWidthMillimeter / 2, DISTANCE_TO_VIEWER));
-        verticalViewAngle = 2 * Math.toDegrees(2 * Math.atan2(screenHeightMillimeter / 2, DISTANCE_TO_VIEWER));
+        horizontalViewAngle = 2.75 * Math.toDegrees(2 * Math.atan2(screenWidthMillimeter / 2, DISTANCE_TO_VIEWER));
+        verticalViewAngle = 2.75 * Math.toDegrees(2 * Math.atan2(screenHeightMillimeter / 2, DISTANCE_TO_VIEWER));
         Log.d(TAG, "horizontalViewAngle: " + horizontalViewAngle +
                 ", verticalViewAngle: " + verticalViewAngle);
 
