@@ -33,9 +33,9 @@ public class ACFCameraViewService extends Service implements Observer {
     private Location location;
     private ACFOrientation orientation;
 
-    private City berlin = new City("Berlin", "Germany", "Europe", 13.408333, 52.518611);
-    private City stockholm = new City("Stockholm", "Sweden", "Europe", 18.05, 59.325);
-    private City[] cities = {berlin, stockholm};
+    private ACFCity berlin = new ACFCity("Berlin", "Germany", "Europe", 13.408333, 52.518611);
+    private ACFCity stockholm = new ACFCity("Stockholm", "Sweden", "Europe", 18.05, 59.325);
+    private ACFCity[] cities = {berlin, stockholm};
 
     private double screenWidthMillimeter, screenHeightMillimeter;
     private int screenWidthPixel, screenHeightPixel;
@@ -215,7 +215,7 @@ public class ACFCameraViewService extends Service implements Observer {
         return orientation;
     }
 
-    public City[] getCities(){
+    public ACFCity[] getCities(){
         return cities;
     }
 }

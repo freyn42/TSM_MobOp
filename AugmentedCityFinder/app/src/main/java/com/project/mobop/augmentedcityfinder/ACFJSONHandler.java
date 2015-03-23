@@ -60,13 +60,13 @@ public class ACFJSONHandler {
         for(int i = 0; i < jarray.size(); i++){
             jobject = jarray.get(i).getAsJsonObject();
             ACFCity city = new ACFCity();
-            city.setName(jobject.get("city_name").getAsString());
-            city.setCountry(jobject.get("city_country").getAsString());
+            city.setCityName(jobject.get("city_name").getAsString());
+            city.setCountryName(jobject.get("city_country").getAsString());
             Location location = new Location("city");
             location.setLatitude(jobject.get("city_latitude").getAsDouble());
             location.setLongitude(jobject.get("city_longitude").getAsDouble());
             city.setLocation(location);
-            city.setContinent(jobject.get("city_continent").getAsString());
+            city.setContinentName(jobject.get("city_continent").getAsString());
             dbController.addCity(city,db);
         }
     }

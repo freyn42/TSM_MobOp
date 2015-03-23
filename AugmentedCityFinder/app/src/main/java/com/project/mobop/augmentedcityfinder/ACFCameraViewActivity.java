@@ -43,7 +43,7 @@ public class ACFCameraViewActivity extends Activity implements View.OnClickListe
     private boolean mIsBound = false;
     private ACFCameraViewService mBoundService;
 
-    private City[] cities;
+    private ACFCity[] cities;
     private TextView[] tv_city_pointer;
 
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -96,7 +96,7 @@ public class ACFCameraViewActivity extends Activity implements View.OnClickListe
                     Location location = mBoundService.getLocation();
 //                    Log.d(TAG, "new location: long=" + location.getLongitude() + ", lat=" +
 //                            location.getLatitude());
-                    City[] cities = mBoundService.getCities();
+                    ACFCity[] cities = mBoundService.getCities();
                     tv_location.setText("\r\nLatitude:" + (int) location.getLatitude() +
                             ", Longitude: " + (int) location.getLongitude() +
                             ", Distance: " + cities[0].getDistance());
@@ -112,7 +112,7 @@ public class ACFCameraViewActivity extends Activity implements View.OnClickListe
 //                    Log.d(TAG, "new orientation: azimuth=" + Math.toDegrees(orientation.getAzimuth()) +
 //                            ", pitch=" + Math.toDegrees(orientation.getPitch()) +
 //                            ", roll=" + Math.toDegrees(orientation.getRoll()));
-                    City[] cities = mBoundService.getCities();
+                    ACFCity[] cities = mBoundService.getCities();
                     tv_orientation.setText("Azimuth: " + (int) Math.toDegrees(orientation.getAzimuth()) +
                             ", Pitch: " + (int) Math.toDegrees(orientation.getPitch()) +
                             ", Roll: " + (int) Math.toDegrees(orientation.getRoll()) +

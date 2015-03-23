@@ -78,11 +78,11 @@ public class ACFCitiesDatabaseController extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(KEY_NAME, city.getName());
-        values.put(KEY_COUNTRY, city.getCountry());
-        values.put(KEY_LATITUDE, city.getLocation().getLatitude());
-        values.put(KEY_LONGITUDE, city.getLocation().getLongitude());
-        values.put(KEY_CONTINENT, city.getContinent());
+        values.put(KEY_NAME, city.getCityName());
+        values.put(KEY_COUNTRY, city.getCountryName());
+        values.put(KEY_LATITUDE, city.getLatitude());
+        values.put(KEY_LONGITUDE, city.getLongitude());
+        values.put(KEY_CONTINENT, city.getContinentName());
 
         try{
             db.beginTransaction();
@@ -97,11 +97,11 @@ public class ACFCitiesDatabaseController extends SQLiteOpenHelper {
 
     public void addCity(ACFCity city, SQLiteDatabase db){
         ContentValues values = new ContentValues();
-        values.put(KEY_NAME, city.getName());
-        values.put(KEY_COUNTRY, city.getCountry());
-        values.put(KEY_LATITUDE, city.getLocation().getLatitude());
-        values.put(KEY_LONGITUDE, city.getLocation().getLongitude());
-        values.put(KEY_CONTINENT, city.getContinent());
+        values.put(KEY_NAME, city.getCityName());
+        values.put(KEY_COUNTRY, city.getCountryName());
+        values.put(KEY_LATITUDE, city.getLatitude());
+        values.put(KEY_LONGITUDE, city.getLongitude());
+        values.put(KEY_CONTINENT, city.getContinentName());
 
         try{
             db.beginTransaction();
@@ -123,14 +123,14 @@ public class ACFCitiesDatabaseController extends SQLiteOpenHelper {
             do {
                 ACFCity city = new ACFCity();
                 city.setId(Integer.parseInt(cursor.getString(0)));
-                city.setName(cursor.getString(1));
-                city.setCountry(cursor.getString(2));
+                city.setCityName(cursor.getString(1));
+                city.setCountryName(cursor.getString(2));
 
                 Location location = new Location("City");
                 location.setLatitude(cursor.getDouble(3));
                 location.setLongitude(cursor.getDouble(4));
                 city.setLocation(location);
-                city.setContinent(cursor.getString(5));
+                city.setContinentName(cursor.getString(5));
 
                 // Adding city to list
                 citiesList.add(city);
@@ -148,11 +148,11 @@ public class ACFCitiesDatabaseController extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(KEY_NAME, city.getName());
-        values.put(KEY_COUNTRY, city.getCountry());
+        values.put(KEY_NAME, city.getCityName());
+        values.put(KEY_COUNTRY, city.getCountryName());
         values.put(KEY_LATITUDE, city.getLocation().getLatitude());
         values.put(KEY_LONGITUDE, city.getLocation().getLongitude());
-        values.put(KEY_CONTINENT, city.getContinent());
+        values.put(KEY_CONTINENT, city.getContinentName());
 
         // updating row
         try{
