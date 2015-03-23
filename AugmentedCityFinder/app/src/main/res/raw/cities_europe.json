@@ -1,0 +1,408 @@
+{
+	"cities": [{
+		"city_name": "Mariehamn",
+		"city_country": "Aland Islands",
+		"city_latitude": 60.116667,
+		"city_longitude": 19.9,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Tirana",
+		"city_country": "Albania",
+		"city_latitude": 41.31666667,
+		"city_longitude": 19.816667,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Andorra la Vella",
+		"city_country": "Andorra",
+		"city_latitude": 42.5,
+		"city_longitude": 1.516667,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Yerevan",
+		"city_country": "Armenia",
+		"city_latitude": 40.16666667,
+		"city_longitude": 44.5,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Vienna",
+		"city_country": "Austria",
+		"city_latitude": 48.2,
+		"city_longitude": 16.366667,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Baku",
+		"city_country": "Azerbaijan",
+		"city_latitude": 40.38333333,
+		"city_longitude": 49.866667,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Minsk",
+		"city_country": "Belarus",
+		"city_latitude": 53.9,
+		"city_longitude": 27.566667,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Brussels",
+		"city_country": "Belgium",
+		"city_latitude": 50.83333333,
+		"city_longitude": 4.333333,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Sarajevo",
+		"city_country": "Bosnia and Herzegovina",
+		"city_latitude": 43.86666667,
+		"city_longitude": 18.416667,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Sofia",
+		"city_country": "Bulgaria",
+		"city_latitude": 42.68333333,
+		"city_longitude": 23.316667,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Zagreb",
+		"city_country": "Croatia",
+		"city_latitude": 45.8,
+		"city_longitude": 16,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Nicosia",
+		"city_country": "Cyprus",
+		"city_latitude": 35.16666667,
+		"city_longitude": 33.366667,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Prague",
+		"city_country": "Czech Republic",
+		"city_latitude": 50.08333333,
+		"city_longitude": 14.466667,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Copenhagen",
+		"city_country": "Denmark",
+		"city_latitude": 55.66666667,
+		"city_longitude": 12.583333,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Tallinn",
+		"city_country": "Estonia",
+		"city_latitude": 59.43333333,
+		"city_longitude": 24.716667,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Torshavn",
+		"city_country": "Faroe Islands",
+		"city_latitude": 62,
+		"city_longitude": -6.766667,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Helsinki",
+		"city_country": "Finland",
+		"city_latitude": 60.16666667,
+		"city_longitude": 24.933333,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Paris",
+		"city_country": "France",
+		"city_latitude": 48.86666667,
+		"city_longitude": 2.333333,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Tbilisi",
+		"city_country": "Georgia",
+		"city_latitude": 41.68333333,
+		"city_longitude": 44.833333,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Berlin",
+		"city_country": "Germany",
+		"city_latitude": 52.51666667,
+		"city_longitude": 13.4,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Gibraltar",
+		"city_country": "Gibraltar",
+		"city_latitude": 36.13333333,
+		"city_longitude": -5.35,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Athens",
+		"city_country": "Greece",
+		"city_latitude": 37.98333333,
+		"city_longitude": 23.733333,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Saint Peter Port",
+		"city_country": "Guernsey",
+		"city_latitude": 49.45,
+		"city_longitude": -2.533333,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Vatican City",
+		"city_country": "Vatican City",
+		"city_latitude": 41.9,
+		"city_longitude": 12.45,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Budapest",
+		"city_country": "Hungary",
+		"city_latitude": 47.5,
+		"city_longitude": 19.083333,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Reykjavik",
+		"city_country": "Iceland",
+		"city_latitude": 64.15,
+		"city_longitude": -21.95,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Dublin",
+		"city_country": "Ireland",
+		"city_latitude": 53.31666667,
+		"city_longitude": -6.233333,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Douglas",
+		"city_country": "Isle of Man",
+		"city_latitude": 54.15,
+		"city_longitude": -4.483333,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Rome",
+		"city_country": "Italy",
+		"city_latitude": 41.9,
+		"city_longitude": 12.483333,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Saint Helier",
+		"city_country": "Jersey",
+		"city_latitude": 49.18333333,
+		"city_longitude": -2.1,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Pristina",
+		"city_country": "Kosovo",
+		"city_latitude": 42.66666667,
+		"city_longitude": 21.166667,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Riga",
+		"city_country": "Latvia",
+		"city_latitude": 56.95,
+		"city_longitude": 24.1,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Vaduz",
+		"city_country": "Liechtenstein",
+		"city_latitude": 47.13333333,
+		"city_longitude": 9.516667,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Vilnius",
+		"city_country": "Lithuania",
+		"city_latitude": 54.68333333,
+		"city_longitude": 25.316667,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Luxembourg",
+		"city_country": "Luxembourg",
+		"city_latitude": 49.6,
+		"city_longitude": 6.116667,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Skopje",
+		"city_country": "Macedonia",
+		"city_latitude": 42,
+		"city_longitude": 21.433333,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Valletta",
+		"city_country": "Malta",
+		"city_latitude": 35.88333333,
+		"city_longitude": 14.5,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Chisinau",
+		"city_country": "Moldova",
+		"city_latitude": 47,
+		"city_longitude": 28.85,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Monaco",
+		"city_country": "Monaco",
+		"city_latitude": 43.73333333,
+		"city_longitude": 7.416667,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Podgorica",
+		"city_country": "Montenegro",
+		"city_latitude": 42.43333333,
+		"city_longitude": 19.266667,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Amsterdam",
+		"city_country": "Netherlands",
+		"city_latitude": 52.35,
+		"city_longitude": 4.916667,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Oslo",
+		"city_country": "Norway",
+		"city_latitude": 59.91666667,
+		"city_longitude": 10.75,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Warsaw",
+		"city_country": "Poland",
+		"city_latitude": 52.25,
+		"city_longitude": 21,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Lisbon",
+		"city_country": "Portugal",
+		"city_latitude": 38.71666667,
+		"city_longitude": -9.133333,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Bucharest",
+		"city_country": "Romania",
+		"city_latitude": 44.43333333,
+		"city_longitude": 26.1,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Moscow",
+		"city_country": "Russia",
+		"city_latitude": 55.75,
+		"city_longitude": 37.6,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "San Marino",
+		"city_country": "San Marino",
+		"city_latitude": 43.93333333,
+		"city_longitude": 12.416667,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Belgrade",
+		"city_country": "Serbia",
+		"city_latitude": 44.83333333,
+		"city_longitude": 20.5,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Bratislava",
+		"city_country": "Slovakia",
+		"city_latitude": 48.15,
+		"city_longitude": 17.116667,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Ljubljana",
+		"city_country": "Slovenia",
+		"city_latitude": 46.05,
+		"city_longitude": 14.516667,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Madrid",
+		"city_country": "Spain",
+		"city_latitude": 40.4,
+		"city_longitude": -3.683333,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Longyearbyen",
+		"city_country": "Svalbard",
+		"city_latitude": 78.21666667,
+		"city_longitude": 15.633333,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Stockholm",
+		"city_country": "Sweden",
+		"city_latitude": 59.33333333,
+		"city_longitude": 18.05,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Bern",
+		"city_country": "Switzerland",
+		"city_latitude": 46.91666667,
+		"city_longitude": 7.466667,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Ankara",
+		"city_country": "Turkey",
+		"city_latitude": 39.93333333,
+		"city_longitude": 32.866667,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "Kyiv",
+		"city_country": "Ukraine",
+		"city_latitude": 50.43333333,
+		"city_longitude": 30.516667,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "London",
+		"city_country": "United Kingdom",
+		"city_latitude": 51.5,
+		"city_longitude": -0.083333,
+		"city_continent": "Europe"
+	},
+	{
+		"city_name": "North Nicosia",
+		"city_country": "Northern Cyprus",
+		"city_latitude": 35.183333,
+		"city_longitude": 33.366667,
+		"city_continent": "Europe"
+	}]
+}

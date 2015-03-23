@@ -12,6 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.util.List;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -34,6 +37,11 @@ public class MainActivity extends ActionBarActivity {
 
         locationController = new ACFLocationController(this);
         orientationController = new ACFOrientationController(this);
+
+        ACFCitiesDatabaseController dbController = new ACFCitiesDatabaseController(this);
+
+        List<ACFCity> cities = dbController.getAllCities();
+
 
     }
 
