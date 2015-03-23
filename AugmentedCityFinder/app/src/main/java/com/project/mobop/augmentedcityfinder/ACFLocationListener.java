@@ -1,11 +1,10 @@
 package com.project.mobop.augmentedcityfinder;
 
-import android.app.Activity;
+import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
 
 import java.util.Observable;
 
@@ -20,9 +19,9 @@ public class ACFLocationListener extends Observable implements LocationListener 
             "medium", "high" };
     private static final String[] STATUS = { "out of service",
             "temporarily unavailable", "available" };
-    private Activity context;
+    private Context context;
 
-    public ACFLocationListener(Activity appContext){
+    public ACFLocationListener(Context appContext){
         context = appContext;
     }
 

@@ -13,9 +13,9 @@ import java.io.IOException;
  * Created by Nils on 08.03.2015.
  */
 public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
-    SurfaceHolder mSurfaceHolder;
-    Camera mCamera;
-    String TAG = "CameraView";
+    private SurfaceHolder mSurfaceHolder;
+    private Camera mCamera;
+    private String TAG = "CameraView";
 
     public CameraView(Context context, AttributeSet attrs) {
         super(context, attrs);

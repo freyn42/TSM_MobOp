@@ -1,29 +1,25 @@
 package com.project.mobop.augmentedcityfinder;
 
-import android.app.Activity;
+import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.AsyncTask;
-import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Observable;
-import java.util.Observer;
 
 /**
  * Created by thomaso on 03.03.15.
  */
 public class ACFOrientationListener extends Observable implements SensorEventListener{
 
-    private Activity context;
+    private Context context;
     private float[] gravity = null;
     private float[] geomagnetic = null;
     private float gO[] = new float[3];
     private ACFOrientation orientation = new ACFOrientation();
 
-    public ACFOrientationListener(Activity appContext){
+    public ACFOrientationListener(Context appContext){
         context = appContext;
     }
 

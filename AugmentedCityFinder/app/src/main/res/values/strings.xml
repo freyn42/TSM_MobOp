@@ -5,4 +5,5 @@
     <string name="bt_start_cam_label">Start Camera</string>
     <string name="tv_orientation_label">North-South</string>
     <string name="tv_location_label">Zurich</string>
+    <string name="city_pointer">city-pointer</string>
 </resources>

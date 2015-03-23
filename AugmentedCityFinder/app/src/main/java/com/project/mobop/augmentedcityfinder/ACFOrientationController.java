@@ -1,6 +1,5 @@
 package com.project.mobop.augmentedcityfinder;
 
-import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -9,13 +8,13 @@ import android.hardware.SensorManager;
  * Created by thomaso on 03.03.15.
  */
 public class ACFOrientationController {
-    private Activity context;
+    private Context context;
     private SensorManager sensorMgr;
     private Sensor accelerometerSensor;
     private Sensor magneticFieldSensor;
     private ACFOrientationListener orientationListener;
 
-    public ACFOrientationController(Activity appContext){
+    public ACFOrientationController(Context appContext){
         context = appContext;
         sensorMgr = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         accelerometerSensor = sensorMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
