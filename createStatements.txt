@@ -1,0 +1,68 @@
+CREATE TABLE city
+(
+  "cityId" bigserial NOT NULL,
+  "cityName" character varying(50) NOT NULL,
+  latitude double precision NOT NULL,
+  longitude double precision NOT NULL,
+  "countryId" bigint NOT NULL,
+  "deviceId" bigint NOT NULL,
+  CONSTRAINT city_pkey PRIMARY KEY ("cityId"),
+  CONSTRAINT country FOREIGN KEY ("countryId")
+      REFERENCES country ("countryId") MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT device FOREIGN KEY ("deviceId")
+      REFERENCES device ("deviceId") MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+
+CREATE TABLE "cityGroup"
+(
+  "groupId" bigserial NOT NULL,
+  "deviceId" bigint NOT NULL,
+  "groupName" character varying(50) NOT NULL,
+  "creationDate" timestamp with time zone NOT NULL DEFAULT now(),
+  "modificationDate" timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT "cityGroup_pkey" PRIMARY KEY ("groupId"),
+  CONSTRAINT devices FOREIGN KEY ("deviceId")
+      REFERENCES device ("deviceId") MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+
+CREATE TABLE continent
+(
+  "continentId" bigserial NOT NULL,
+  "continentName" character varying(13) NOT NULL,
+  CONSTRAINT continent_pkey PRIMARY KEY ("continentId")
+)
+
+CREATE TABLE country
+(
+  "countryId" bigserial NOT NULL,
+  "countryName" character varying(50) NOT NULL,
+  "continentId" bigint NOT NULL,
+  "countryCode" character varying(5),
+  CONSTRAINT country_pkey PRIMARY KEY ("countryId"),
+  CONSTRAINT continent FOREIGN KEY ("continentId")
+      REFERENCES continent ("continentId") MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+
+CREATE TABLE device
+(
+  "registrationDate" timestamp with time zone NOT NULL DEFAULT now(),
+  "deviceId" bigserial NOT NULL,
+  CONSTRAINT device_pkey PRIMARY KEY ("deviceId")
+)
+
+CREATE TABLE "groupMembership"
+(
+  "cityId" bigint NOT NULL,
+  "groupId" bigint NOT NULL,
+  CONSTRAINT "groupMembershipId" PRIMARY KEY ("cityId", "groupId"),
+  CONSTRAINT city FOREIGN KEY ("cityId")
+      REFERENCES city ("cityId") MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT "group" FOREIGN KEY ("groupId")
+      REFERENCES "cityGroup" ("groupId") MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
