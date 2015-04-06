@@ -6,4 +6,13 @@
     <string name="tv_orientation_label">North-South</string>
     <string name="tv_location_label">Zurich</string>
     <string name="city_pointer">city-pointer</string>
+    <string name="bt_city_settings_label">City Settings</string>
+    <string name="bt_add_city_label">Add City</string>
+    <string name="bt_add_group_label">Add Group</string>
+    <string name="bt_edit_group_label">Edit Group</string>
+    <string name="bt_edit_city_label">Edit City</string>
+    <string name="bt_delete_city_label">Delete City</string>
+    <string name="bt_delete_group_label">Delete Group</string>
+    <string name="bt_exit_label">"Save and Exit"</string>
+    <string name="tv_edit_group_title">Edit Group</string>
 </resources>

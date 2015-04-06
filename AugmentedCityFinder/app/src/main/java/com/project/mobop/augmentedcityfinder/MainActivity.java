@@ -40,7 +40,7 @@ public class MainActivity extends ActionBarActivity {
         ACFCitiesDatabaseController dbController = new ACFCitiesDatabaseController(this);
 
         List<ACFCity> cities = dbController.getAllCities();
-
+        List<ACFCity> visibleCities = dbController.getAllVisibleCities();
 
     }
 
@@ -89,9 +89,6 @@ public class MainActivity extends ActionBarActivity {
      */
     public static class PlaceholderFragment extends Fragment {
 
-        private TextView tv_direction;
-        private TextView tv_location;
-
         public PlaceholderFragment() {
         }
 
@@ -100,17 +97,7 @@ public class MainActivity extends ActionBarActivity {
                                  Bundle savedInstanceState) {
             LayoutInflater lf = getActivity().getLayoutInflater();
             View rootView = lf.inflate(R.layout.fragment_main, container, false);
-            tv_direction = (TextView)rootView.findViewById(R.id.tv_direction);
-            tv_location = (TextView)rootView.findViewById(R.id.tv_location);
             return rootView;
-        }
-
-        public TextView getTvDirection(){
-            return tv_direction;
-        }
-
-        public TextView getTvLocation(){
-            return tv_location;
         }
 
     }
@@ -118,6 +105,11 @@ public class MainActivity extends ActionBarActivity {
     public void startCameraViewActivity(View v){
         Log.d("MainActivity", "Start Camera Button clicked!");
         Intent intent = new Intent(this, ACFCameraViewActivity.class);
+        startActivity(intent);
+    }
+
+    public void startCitySettingsActivity(View v){
+        Intent intent = new Intent(this, ACFCitySettingsActivity.class);
         startActivity(intent);
     }
 }

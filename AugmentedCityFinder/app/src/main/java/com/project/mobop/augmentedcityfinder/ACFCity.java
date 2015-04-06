@@ -12,6 +12,7 @@ public class ACFCity {
     private Location location;
     private String countryName;
     private String continentName;
+    private boolean showOnScreen;
 
     private double distance, deltaAzimuth, deltaPitch;
     private int leftMargin, topMargin;
@@ -137,5 +138,13 @@ public class ACFCity {
 
     public void setInView(boolean isInView) {
         this.isInView = isInView;
+    }
+
+    public boolean isShowOnScreen() {
+        return showOnScreen;
+    }
+
+    public void setShowOnScreen(boolean showOnScreen) {
+        this.showOnScreen = showOnScreen;
     }
 }

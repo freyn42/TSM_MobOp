@@ -162,7 +162,7 @@ public class ACFCameraViewService extends Service implements Observer {
 
     private void loadCities() {
         ACFCitiesDatabaseController citiesDBCtrl = new ACFCitiesDatabaseController(this);
-        citiesList = citiesDBCtrl.getAllCities();
+        citiesList = citiesDBCtrl.getAllVisibleCities();
     }
 
     @Override

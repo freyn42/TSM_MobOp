@@ -5,11 +5,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -69,5 +73,30 @@ public class ACFJSONHandler {
             city.setContinentName(jobject.get("city_continent").getAsString());
             dbController.addCity(city,db);
         }
+    }
+
+    public JsonArray getJSONArray(String jsonString, String arrayName) throws JSONException{
+        JsonElement jelement = new JsonParser().parse(jsonString);
+        JsonObject jobject = jelement.getAsJsonObject();
+        JsonElement success = jobject.get("success");
+        if(!success.getAsBoolean()){
+            throw new JSONException("success = false");
+        }
+
+        jobject = jobject.getAsJsonObject("data");
+        JsonArray jarray = jobject.getAsJsonArray(arrayName);
+        return jarray;
+    }
+
+    public String getJSONString(ACFCityGroup group){
+        JsonObject jsonobj = new JsonObject();
+        jsonobj.addProperty("deviceId", group.getDeviceId());
+        jsonobj.addProperty("name", group.getName());
+        JsonArray array = new JsonArray();
+        for (ACFCity city : group.getCityList()) {
+            array.add(new JsonPrimitive(city.getId()));
+        }
+        Gson gson = new Gson();
+        return gson.fromJson(jsonobj,String.class);
     }
 }
