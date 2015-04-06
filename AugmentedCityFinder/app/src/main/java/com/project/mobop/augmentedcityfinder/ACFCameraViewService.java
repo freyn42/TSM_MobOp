@@ -47,6 +47,11 @@ public class ACFCameraViewService extends Service implements Observer {
     private final String PREFS_LONGITUDE = "Longitude";
     private final String PREFS_LATITUDE = "Latitude";
 
+    private final double ANGLE_PRECISION = 0.2;
+
+
+    double oldAzimuth = 0;
+
     public ACFCameraViewService() {
     }
 
@@ -123,7 +128,7 @@ public class ACFCameraViewService extends Service implements Observer {
             SharedPreferences.Editor prefsEdit = prefs.edit();
             prefsEdit.putFloat(PREFS_LONGITUDE, (float) location.getLongitude());
             prefsEdit.putFloat(PREFS_LATITUDE, (float) location.getLatitude());
-            prefsEdit.commit();
+            prefsEdit.apply();
         }
 
         return super.onUnbind(intent);
@@ -137,6 +142,8 @@ public class ACFCameraViewService extends Service implements Observer {
     }
 
     private void registerOrientation(){
+        Log.d(TAG, "registerOrientation");
+
         orientationController = new ACFOrientationController(this);
         orientationController.registerListener();
         orientationObservable = orientationController.getOrientationListener();
@@ -144,11 +151,15 @@ public class ACFCameraViewService extends Service implements Observer {
     }
 
     private void unregisterOrientation(){
+        Log.d(TAG, "unregisterOrientation");
+
         orientationObservable.deleteObserver(this);
         orientationController.unregisterListener();
     }
 
     private void registerLocation(){
+        Log.d(TAG, "registerLocation");
+
         locationController = new ACFLocationController(this);
         locationController.requestLocationUpdates(15000, 1);
         locationObservable = locationController.getLocationListener();
@@ -156,11 +167,15 @@ public class ACFCameraViewService extends Service implements Observer {
     }
 
     private void unregisterLocation(){
+        Log.d(TAG, "unregisterLocation");
+
         locationObservable.deleteObserver(this);
         locationController.unregisterListener();
     }
 
     private void loadCities() {
+        Log.d(TAG, "loadCities");
+
         ACFCitiesDatabaseController citiesDBCtrl = new ACFCitiesDatabaseController(this);
         citiesList = citiesDBCtrl.getAllVisibleCities();
     }
@@ -171,11 +186,56 @@ public class ACFCameraViewService extends Service implements Observer {
 
         if (observable == orientationObservable){
             orientation = (ACFOrientation) data;
-            orientationCalculations();
+            if (Math.abs(oldAzimuth - orientation.getAzimuth()) < ANGLE_PRECISION){
+                return;
+            }
+            if (orientation != null){
+                oldAzimuth = orientation.getAzimuth();
+            }
         }else if (observable == locationObservable){
             location = (Location) data;
-            locationCalculations();
         }
+        positionCalculations();
+    }
+
+    private void positionCalculations(){
+        if (location != null){
+            for (ACFCity city : citiesList){
+                // Update distance to city
+                city.setDistance(location.distanceTo(city.getLocation()));
+
+                // Calculate orientation to city
+                double bearing = location.bearingTo(city.getLocation());
+                if (bearing > 180){
+                    bearing = bearing - 360;
+                }
+                double azimuth = Math.toDegrees(orientation.getAzimuth());
+                double deltaAzimuth = azimuth - bearing;
+                city.setDeltaAzimuth(deltaAzimuth);
+                city.setDeltaPitch(0);
+
+                if (Math.abs(deltaAzimuth) < (horizontalViewAngle / 2)){
+                    city.setInView(true);
+                }else{
+                    city.setInView(false);
+                }
+
+                // Update city pointer position
+                if (city.isInView()){
+                    int leftMargin = (int) ((screenWidthPixel / 2) +
+                            (horizontalPixelDegree * ((int) -city.getDeltaAzimuth())) - 25);
+                        city.setLeftMargin(leftMargin);
+
+
+                    int topMargin = (int) ((screenHeightPixel / 2) - 25);
+                    city.setTopMargin(topMargin);
+                }
+            }
+        }
+
+        Intent intent = new Intent(ACTION_UPDATE_NOTIFICATION);
+        intent.putExtra(EXTRA_UPDATE_SOURCE, EXTRA_ORIENTATION);
+        sendMessage(intent);
     }
 
     private void orientationCalculations(){
@@ -231,14 +291,20 @@ public class ACFCameraViewService extends Service implements Observer {
     }
 
     public Location getLocation() {
+//        Log.d(TAG, "getLocation");
+
         return location;
     }
 
-    public ACFOrientation getOrientation() {
+    public ACFOrientation getOrientation(){
+//        Log.d(TAG, "getOrientation");
+
         return orientation;
     }
 
     public List<ACFCity> getCitiesList() {
+//        Log.d(TAG, "getCitiesList");
+
         return citiesList;
     }
 }
