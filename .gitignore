@@ -1,2 +1,6 @@
+**/.gradle
+**/local.properties
+**/.idea
+**/app/build
+**/.DS_Store
 *.iml
-CameraTest_2/.idea/misc.xml
