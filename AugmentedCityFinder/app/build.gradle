@@ -18,6 +18,15 @@ android {
     }
     productFlavors {
     }
+    sourceSets {
+        main {
+            res.srcDirs =
+                    [
+                            'src/main/res/flags',
+                            'src/main/res'
+                    ]
+        }
+    }
 }
 
 dependencies {
