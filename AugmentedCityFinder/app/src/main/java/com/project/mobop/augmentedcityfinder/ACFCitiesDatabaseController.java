@@ -398,7 +398,7 @@ public class ACFCitiesDatabaseController extends SQLiteOpenHelper {
     public void addContinents(String result) throws JSONException {
         ACFJSONHandler jsonHandler = new ACFJSONHandler(context);
         JsonArray continentArray = jsonHandler.getJSONArray(result, "continents");
-        if(!db.isOpen()){
+        if(db == null || !db.isOpen()){
             db = getWritableDatabase();
         }
         try{
@@ -419,7 +419,7 @@ public class ACFCitiesDatabaseController extends SQLiteOpenHelper {
     public void addCountries(String result) throws JSONException {
         ACFJSONHandler jsonHandler = new ACFJSONHandler(context);
         JsonArray countryArray = jsonHandler.getJSONArray(result, "countries");
-        if(!db.isOpen()){
+        if(db == null || !db.isOpen()){
             db = getWritableDatabase();
         }
         try{
@@ -440,7 +440,7 @@ public class ACFCitiesDatabaseController extends SQLiteOpenHelper {
     }
 
     public void addSystemDevice(){
-        if(!db.isOpen()){
+        if(db == null || !db.isOpen()){
             db = getWritableDatabase();
         }
         try{
@@ -458,7 +458,7 @@ public class ACFCitiesDatabaseController extends SQLiteOpenHelper {
     public void addCities(String result) throws JSONException {
         ACFJSONHandler jsonHandler = new ACFJSONHandler(context);
         JsonArray cityArray = jsonHandler.getJSONArray(result, "cities");
-        if(!db.isOpen()){
+        if(db == null || !db.isOpen()){
             db = getWritableDatabase();
         }
         try{
@@ -483,7 +483,7 @@ public class ACFCitiesDatabaseController extends SQLiteOpenHelper {
     public void addGroups(String result) throws JSONException {
         ACFJSONHandler jsonHandler = new ACFJSONHandler(context);
         JsonArray groupArray = jsonHandler.getJSONArray(result, "groupList");
-        if(!db.isOpen()){
+        if(db == null || !db.isOpen()){
             db = getWritableDatabase();
         }
         try{

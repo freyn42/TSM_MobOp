@@ -4,15 +4,26 @@ import android.app.Activity;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import org.json.JSONException;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -21,9 +32,10 @@ import java.util.List;
 public class ACFEditGroupActivity extends Activity{
 
     private ListView lv_edit_cities;
-    ACFCitiesDatabaseController dbController;
-    ACFRestPOSTController postController;
-    ACFCityGroup group;
+    private ACFCitiesDatabaseController dbController;
+    private ACFRestPOSTController postController;
+    private ACFCityGroup group;
+    private EditGroupCitiesAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,29 +56,37 @@ public class ACFEditGroupActivity extends Activity{
 
         lv_edit_cities = (ListView)findViewById(R.id.lv_edit_group_cities);
         List<ACFCity> cities = dbController.getAllCities();
-        EditGroupCitiesAdapter adapter = new EditGroupCitiesAdapter(this,cities);
+        adapter = new EditGroupCitiesAdapter(this,cities);
         lv_edit_cities.setAdapter(adapter);
-
-
     }
 
     public void onButtonEditGroupSaveClicked(View v){
         if(group.getId() == 0){
+            String groupName = ((EditText)findViewById(R.id.et_edit_group_name)).getText().toString();
+            group.setName(groupName);
+            group.setCityList(adapter.getCheckedCities());
             String response = postController.postGroupToServer(group);
+            try {
+                dbController.addGroups(response);
+            } catch (JSONException e) {
+                Log.e("EditGroup", e.getLocalizedMessage());
+            }
+
         }
         finish();
     }
 
     private class EditGroupCitiesAdapter implements ListAdapter {
 
-        List<ACFCity> cities;
-        List<Integer> checkedItems;
-        Context context;
+        private List<ACFCity> cities;
+        private List<ACFCity> checkedCities;
+        private Context context;
 
         public EditGroupCitiesAdapter(Context context, List<ACFCity> cities){
+            Collections.sort(cities);
             this.cities = cities;
             this.context = context;
-            checkedItems = new ArrayList<Integer>();
+            checkedCities = new ArrayList<ACFCity>();
         }
 
         @Override
@@ -116,7 +136,7 @@ public class ACFEditGroupActivity extends Activity{
             CheckBox cbCity = (CheckBox) convertView.findViewById(R.id.cb_edit_group_city);
             cbCity.setText(((ACFCity) getItem(position)).getCityName());
 
-            if(checkedItems.contains(position)){
+            if(checkedCities.contains(getItem(position))){
                 cbCity.setChecked(true);
             }
 
@@ -124,9 +144,9 @@ public class ACFEditGroupActivity extends Activity{
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(isChecked){
-                        checkedItems.add(position);
+                        checkedCities.add((ACFCity)getItem(position));
                     } else {
-                        checkedItems.remove((Integer)position);
+                        checkedCities.remove(getItem(position));
                     }
                 }
             });
@@ -148,6 +168,9 @@ public class ACFEditGroupActivity extends Activity{
             return false;
         }
 
+        public List<ACFCity> getCheckedCities() {
+            return checkedCities;
+        }
 
     }
 

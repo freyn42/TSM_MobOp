@@ -96,7 +96,7 @@ public class ACFJSONHandler {
         for (ACFCity city : group.getCityList()) {
             array.add(new JsonPrimitive(city.getId()));
         }
-        Gson gson = new Gson();
-        return gson.fromJson(jsonobj,String.class);
+        jsonobj.add("members",array);
+        return jsonobj.toString();
     }
 }

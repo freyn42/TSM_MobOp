@@ -61,14 +61,14 @@ public class ACFRestPOSTController {
         PostAsyncTask task = new PostAsyncTask(jsonString);
         task.execute(url);
         try {
-            result = task.get(5000, TimeUnit.MILLISECONDS);
+            result = task.get();
         } catch (InterruptedException e) {
             ((Activity)context).finish();
         } catch (ExecutionException e) {
             ((Activity)context).finish();
-        } catch (TimeoutException e) {
+        } /*catch (TimeoutException e) {
             ((Activity)context).finish();
-        }
+        }*/
         return result;
     }
 
@@ -84,7 +84,7 @@ public class ACFRestPOSTController {
             HttpPost postRequest = new HttpPost(url);
 
             if(jsonString != null){
-                postRequest.setEntity(new StringEntity(jsonString, "UTF8"));
+                postRequest.setEntity(new StringEntity(jsonString));
                 postRequest.setHeader("Content-type", "application/json");
             }
 

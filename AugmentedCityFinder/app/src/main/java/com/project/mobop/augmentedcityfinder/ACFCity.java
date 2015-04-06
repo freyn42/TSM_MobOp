@@ -5,7 +5,7 @@ import android.location.Location;
 /**
  * Created by tom on 22.03.2015.
  */
-public class ACFCity {
+public class ACFCity implements Comparable<ACFCity>{
 
     private int id;
     private String cityName;
@@ -146,5 +146,10 @@ public class ACFCity {
 
     public void setShowOnScreen(boolean showOnScreen) {
         this.showOnScreen = showOnScreen;
+    }
+
+    @Override
+    public int compareTo(ACFCity another) {
+        return cityName.compareTo(another.getCityName());
     }
 }
