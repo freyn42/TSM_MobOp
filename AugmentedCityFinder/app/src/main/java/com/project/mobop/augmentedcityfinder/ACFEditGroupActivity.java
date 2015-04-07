@@ -13,6 +13,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -34,8 +35,10 @@ public class ACFEditGroupActivity extends Activity{
     private ListView lv_edit_cities;
     private ACFCitiesDatabaseController dbController;
     private ACFRestPOSTController postController;
+    private ACFRestPUTController putController;
     private ACFCityGroup group;
     private EditGroupCitiesAdapter adapter;
+    private EditText etGroupName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,34 +47,48 @@ public class ACFEditGroupActivity extends Activity{
         setContentView(R.layout.activity_edit_group);
 
         dbController = new ACFCitiesDatabaseController(this);
+
+        postController = new ACFRestPOSTController(this,dbController);
+        putController = new ACFRestPUTController(this,dbController);
+
+        lv_edit_cities = (ListView)findViewById(R.id.lv_edit_group_cities);
+        List<ACFCity> cities = dbController.getAllCities();
+        adapter = new EditGroupCitiesAdapter(this,cities);
+        lv_edit_cities.setAdapter(adapter);
+        etGroupName = (EditText)findViewById(R.id.et_edit_group_name);
+
         Bundle b = getIntent().getExtras();
         if(b == null){
             group = new ACFCityGroup();
             group.setDeviceId(dbController.getDeviceId());
         } else {
             group = dbController.getGroup(b.getInt("group_id"));
+            adapter.getCheckedCities().addAll(group.getCityList());
+            etGroupName.setText(group.getName());
         }
 
-        postController = new ACFRestPOSTController(this,dbController);
-
-        lv_edit_cities = (ListView)findViewById(R.id.lv_edit_group_cities);
-        List<ACFCity> cities = dbController.getAllCities();
-        adapter = new EditGroupCitiesAdapter(this,cities);
-        lv_edit_cities.setAdapter(adapter);
     }
 
     public void onButtonEditGroupSaveClicked(View v){
         if(group.getId() == 0){
-            String groupName = ((EditText)findViewById(R.id.et_edit_group_name)).getText().toString();
+            String groupName = etGroupName.getText().toString();
             group.setName(groupName);
             group.setCityList(adapter.getCheckedCities());
             String response = postController.postGroupToServer(group);
             try {
                 dbController.addGroups(response);
             } catch (JSONException e) {
-                Log.e("EditGroup", e.getLocalizedMessage());
+                Toast.makeText(this, "Error saving City to Database:\n" + response, Toast.LENGTH_SHORT).show();
             }
-
+        } else {
+            String response = putController.putGroupToServer(group);
+            if(response != null && !response.isEmpty()) {
+                try {
+                    dbController.updateGroups(response);
+                } catch (JSONException e) {
+                    Toast.makeText(this, "Error saving City to Database:\n" + response, Toast.LENGTH_SHORT).show();
+                }
+            }
         }
         finish();
     }

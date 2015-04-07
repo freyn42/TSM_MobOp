@@ -1,14 +1,11 @@
 package com.project.mobop.augmentedcityfinder;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -17,8 +14,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -44,11 +39,11 @@ public class ACFRestPOSTController {
         try {
             result = task.get(5000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
-            ((Activity)context).finish();
+            Toast.makeText(context, "InterruptedException in POST to Server",Toast.LENGTH_SHORT).show();
         } catch (ExecutionException e) {
-            ((Activity)context).finish();
+            Toast.makeText(context, "ExecutionException in POST to Server",Toast.LENGTH_SHORT).show();
         } catch (TimeoutException e) {
-            ((Activity)context).finish();
+            Toast.makeText(context, "Timeout in POST to Server",Toast.LENGTH_SHORT).show();
         }
         return result;
     }
@@ -57,18 +52,37 @@ public class ACFRestPOSTController {
         String result = "";
         String url = "http://acf-mobop.rhcloud.com/rest/group";
         ACFJSONHandler jsonHandler = new ACFJSONHandler(context);
-        String jsonString = jsonHandler.getJSONString(group);
+        String jsonString = jsonHandler.getJSONPostString(group);
         PostAsyncTask task = new PostAsyncTask(jsonString);
         task.execute(url);
         try {
-            result = task.get();
+            result = task.get(5000,TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
-            ((Activity)context).finish();
+            Toast.makeText(context, "InterruptedException in POST to Server",Toast.LENGTH_SHORT).show();
         } catch (ExecutionException e) {
-            ((Activity)context).finish();
-        } /*catch (TimeoutException e) {
-            ((Activity)context).finish();
-        }*/
+            Toast.makeText(context, "ExecutionException in POST to Server",Toast.LENGTH_SHORT).show();
+        } catch (TimeoutException e) {
+            Toast.makeText(context, "Timeout in POST to Server",Toast.LENGTH_SHORT).show();
+        }
+        return result;
+    }
+
+    public String postCityToServer(ACFCity city) {
+        String result = "";
+        String url = "http://acf-mobop.rhcloud.com/rest/city";
+        ACFJSONHandler jsonHandler = new ACFJSONHandler(context);
+        String jsonString = jsonHandler.getJSONPostString(city);
+        PostAsyncTask task = new PostAsyncTask(jsonString);
+        task.execute(url);
+        try {
+            result = task.get(5000,TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            Toast.makeText(context, "InterruptedException in POST to Server",Toast.LENGTH_SHORT).show();
+        } catch (ExecutionException e) {
+            Toast.makeText(context, "ExecutionException in POST to Server",Toast.LENGTH_SHORT).show();
+        } catch (TimeoutException e) {
+            Toast.makeText(context, "Timeout in POST to Server",Toast.LENGTH_SHORT).show();
+        }
         return result;
     }
 
@@ -100,7 +114,7 @@ public class ACFRestPOSTController {
                 result = "Did not work!";
 
         } catch (Exception e) {
-            Log.d("InputStream", e.getMessage());
+            Toast.makeText(context, "Error in POST to Server",Toast.LENGTH_SHORT).show();
         }
 
         return result;

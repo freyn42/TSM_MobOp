@@ -54,7 +54,6 @@ public class ACFCitiesDatabaseController extends SQLiteOpenHelper {
     private static final String KEY_CITY_LATITUDE = "city_latitude";
     private static final String KEY_CITY_LONGITUDE = "city_longitude";
     private static final String KEY_CITY_DEVICE = "city_device";
-    private static final String KEY_CITY_SHOW = "city_show";
 
     // Country Table Columns names
     private static final String KEY_COUNTRY_ID = "country_id";
@@ -144,7 +143,6 @@ public class ACFCitiesDatabaseController extends SQLiteOpenHelper {
                 + KEY_CITY_LATITUDE + " DECIMAL,"
                 + KEY_CITY_LONGITUDE + " DECIMAL,"
                 + KEY_CITY_DEVICE + " INTEGER, "
-                + KEY_CITY_SHOW + " BOOLEAN,"
                 + "FOREIGN KEY (" + KEY_CITY_COUNTRY + ") REFERENCES " + TABLE_COUNTRY + "(" + KEY_COUNTRY_ID + "),"
                 + "FOREIGN KEY (" + KEY_CITY_DEVICE + ") REFERENCES " + TABLE_DEVICE + "(" + KEY_DEVICE_ID + ")"
                 + ");";
@@ -330,7 +328,9 @@ public class ACFCitiesDatabaseController extends SQLiteOpenHelper {
 
     public List<ACFCity> getAllCities(){
         List<ACFCity> citiesList = new ArrayList<ACFCity>();
-        String selectQuery = "SELECT  * FROM " + TABLE_CITY;
+        String selectQuery = "SELECT " + KEY_CITY_ID + "," + KEY_CITY_DEVICE + "," + KEY_CITY_NAME + "," + KEY_CITY_LONGITUDE + "," + KEY_CITY_LATITUDE + "," + KEY_COUNTRY_NAME + "," + KEY_CONTINENT_NAME
+            + " FROM " + TABLE_CITY  + " JOIN " + TABLE_COUNTRY + " ON " + KEY_CITY_COUNTRY + " =" + KEY_COUNTRY_ID
+                + " JOIN " + TABLE_CONTINENT + " ON " + KEY_COUNTRY_CONTINENT + " =" + KEY_CONTINENT_ID + ";";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -338,15 +338,15 @@ public class ACFCitiesDatabaseController extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 ACFCity city = new ACFCity();
-                city.setId(Integer.parseInt(cursor.getString(0)));
-                city.setCityName(cursor.getString(1));
-                city.setCountryName(cursor.getString(2));
-
+                city.setId(cursor.getInt(0));
+                city.setDeviceId(cursor.getInt(1));
+                city.setCityName(cursor.getString(2));
                 Location location = new Location("City");
                 location.setLatitude(cursor.getDouble(3));
                 location.setLongitude(cursor.getDouble(4));
                 city.setLocation(location);
-                city.setContinentName(cursor.getString(5));
+                city.setCountryName(cursor.getString(5));
+                city.setContinentName(cursor.getString(6));
 
                 // Adding city to list
                 citiesList.add(city);
@@ -480,6 +480,32 @@ public class ACFCitiesDatabaseController extends SQLiteOpenHelper {
         }
     }
 
+    public void updateCities(String result) throws JSONException {
+        ACFJSONHandler jsonHandler = new ACFJSONHandler(context);
+        JsonArray cityArray = jsonHandler.getJSONArray(result, "cities");
+        if(db == null || !db.isOpen()){
+            db = getWritableDatabase();
+        }
+        try{
+            db.beginTransaction();
+            for(int i = 0; i < cityArray.size(); i++){
+                JsonObject jobject = cityArray.get(i).getAsJsonObject();
+                ContentValues values = new ContentValues();
+                values.put(KEY_CITY_ID, jobject.get("id").getAsInt());
+                values.put(KEY_CITY_DEVICE, jobject.get("deviceId").getAsInt());
+                values.put(KEY_CITY_LONGITUDE, jobject.get("longitude").getAsDouble());
+                values.put(KEY_CITY_LATITUDE, jobject.get("latitude").getAsDouble());
+                values.put(KEY_CITY_COUNTRY, jobject.get("countryId").getAsInt());
+                values.put(KEY_CITY_NAME, jobject.get("name").getAsString());
+                db.update(TABLE_CITY, values, KEY_CITY_ID + " = ?",
+                        new String[]{String.valueOf(jobject.get("id").getAsInt())});
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
     public void addGroups(String result) throws JSONException {
         ACFJSONHandler jsonHandler = new ACFJSONHandler(context);
         JsonArray groupArray = jsonHandler.getJSONArray(result, "groupList");
@@ -499,6 +525,41 @@ public class ACFCitiesDatabaseController extends SQLiteOpenHelper {
                 if(db.insert(TABLE_GROUP, null, values) == -1){
                     throw new JSONException("");
                 }
+                JsonArray memberArray = jobject.getAsJsonArray("members");
+                for(int j = 0; j < memberArray.size(); j++){
+                    ContentValues memberValues = new ContentValues();
+                    memberValues.put(KEY_CITY_GROUP_CITY,memberArray.get(j).getAsInt());
+                    memberValues.put(KEY_CITY_GROUP_GROUP,jobject.get("id").getAsInt());
+                    db.insert(TABLE_CITY_GROUP, null, memberValues);
+                }
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public void updateGroups(String result) throws JSONException {
+        ACFJSONHandler jsonHandler = new ACFJSONHandler(context);
+        JsonArray groupArray = jsonHandler.getJSONArray(result, "groupList");
+        if(db == null || !db.isOpen()){
+            db = getWritableDatabase();
+        }
+        try{
+            db.beginTransaction();
+            for(int i = 0; i < groupArray.size(); i++){
+                JsonObject jobject = groupArray.get(i).getAsJsonObject();
+                ContentValues values = new ContentValues();
+                values.put(KEY_GROUP_ID, jobject.get("id").getAsInt());
+                values.put(KEY_GROUP_CREATION_DATE, jobject.get("creationDate").getAsString());
+                values.put(KEY_GROUP_MODIFICATION_DATE, jobject.get("modificationDate").getAsString());
+                values.put(KEY_GROUP_DEVICE, jobject.get("deviceId").getAsInt());
+                values.put(KEY_GROUP_NAME, jobject.get("name").getAsString());
+                db.update(TABLE_GROUP, null, KEY_GROUP_ID + " = ?", new String[] { String.valueOf(jobject.get("id").getAsInt()) });
+
+                //delete all entries with this group_id in table city_group
+                db.delete(TABLE_CITY_GROUP,KEY_CITY_GROUP_GROUP + " = ?",new String[] { String.valueOf(jobject.get("id").getAsInt()) });
+
                 JsonArray memberArray = jobject.getAsJsonArray("members");
                 for(int j = 0; j < memberArray.size(); j++){
                     ContentValues memberValues = new ContentValues();
@@ -534,7 +595,7 @@ public class ACFCitiesDatabaseController extends SQLiteOpenHelper {
         groupCursor.close();
 
         for(ACFCityGroup group : groups) {
-            String selectMembersQuery = "SELECT " + KEY_CITY_NAME + "," + KEY_CITY_LONGITUDE + "," + KEY_CITY_LATITUDE + "," + KEY_COUNTRY_NAME + "," + KEY_CONTINENT_NAME
+            String selectMembersQuery = "SELECT " + KEY_CITY_ID + "," + KEY_CITY_DEVICE + "," + KEY_CITY_NAME + "," + KEY_CITY_LONGITUDE + "," + KEY_CITY_LATITUDE + "," + KEY_COUNTRY_NAME + "," + KEY_CONTINENT_NAME + "," + KEY_COUNTRY_ID
                     + " FROM " + TABLE_GROUP + " JOIN " + TABLE_CITY_GROUP + " ON " + KEY_GROUP_ID + " =" + KEY_CITY_GROUP_GROUP
                     + " JOIN " + TABLE_CITY + " ON " + KEY_CITY_GROUP_CITY + " =" + KEY_CITY_ID
                     + " JOIN " + TABLE_COUNTRY + " ON " + KEY_CITY_COUNTRY + " =" + KEY_COUNTRY_ID
@@ -544,13 +605,16 @@ public class ACFCitiesDatabaseController extends SQLiteOpenHelper {
             if (cityCursor.moveToFirst()) {
                 do {
                     ACFCity city = new ACFCity();
-                    city.setCityName(cityCursor.getString(0));
+                    city.setId(cityCursor.getInt(0));
+                    city.setDeviceId(cityCursor.getInt(1));
+                    city.setCityName(cityCursor.getString(2));
                     Location location = new Location("City");
-                    location.setLongitude(cityCursor.getDouble(1));
-                    location.setLatitude(cityCursor.getDouble(2));
+                    location.setLongitude(cityCursor.getDouble(3));
+                    location.setLatitude(cityCursor.getDouble(4));
                     city.setLocation(location);
-                    city.setCountryName(cityCursor.getString(3));
-                    city.setContinentName(cityCursor.getString(4));
+                    city.setCountryName(cityCursor.getString(5));
+                    city.setContinentName(cityCursor.getString(6));
+                    city.setCountryId(cityCursor.getInt(7));
                     group.getCityList().add(city);
                 } while (cityCursor.moveToNext());
             }
@@ -563,7 +627,7 @@ public class ACFCitiesDatabaseController extends SQLiteOpenHelper {
     public List<ACFCity> getAllVisibleCities() {
         SQLiteDatabase db = getReadableDatabase();
         List<ACFCity> cities = new ArrayList<ACFCity>();
-        String selectVisibleCitiesQuery = "SELECT " + KEY_CITY_NAME + "," + KEY_CITY_LONGITUDE + "," + KEY_CITY_LATITUDE + "," + KEY_COUNTRY_NAME + "," + KEY_CONTINENT_NAME
+        String selectVisibleCitiesQuery = "SELECT " + KEY_CITY_ID + "," + KEY_CITY_DEVICE + "," + KEY_CITY_NAME + "," + KEY_CITY_LONGITUDE + "," + KEY_CITY_LATITUDE + "," + KEY_COUNTRY_NAME + "," + KEY_CONTINENT_NAME + "," + KEY_COUNTRY_ID
                 + " FROM " + TABLE_GROUP + " JOIN " + TABLE_CITY_GROUP + " ON " + KEY_GROUP_ID + " =" + KEY_CITY_GROUP_GROUP
                 + " JOIN " + TABLE_CITY + " ON " + KEY_CITY_GROUP_CITY + " =" + KEY_CITY_ID
                 + " JOIN " + TABLE_COUNTRY + " ON " + KEY_CITY_COUNTRY + " =" + KEY_COUNTRY_ID
@@ -573,13 +637,16 @@ public class ACFCitiesDatabaseController extends SQLiteOpenHelper {
         if (cityCursor.moveToFirst()) {
             do {
                 ACFCity city = new ACFCity();
-                city.setCityName(cityCursor.getString(0));
+                city.setId(cityCursor.getInt(0));
+                city.setDeviceId(cityCursor.getInt(1));
+                city.setCityName(cityCursor.getString(2));
                 Location location = new Location("City");
-                location.setLongitude(cityCursor.getDouble(1));
-                location.setLatitude(cityCursor.getDouble(2));
+                location.setLongitude(cityCursor.getDouble(3));
+                location.setLatitude(cityCursor.getDouble(4));
                 city.setLocation(location);
-                city.setCountryName(cityCursor.getString(3));
-                city.setContinentName(cityCursor.getString(4));
+                city.setCountryName(cityCursor.getString(5));
+                city.setContinentName(cityCursor.getString(6));
+                city.setCountryId(cityCursor.getInt(7));
                 cities.add(city);
             } while (cityCursor.moveToNext());
         }
@@ -642,7 +709,7 @@ public class ACFCitiesDatabaseController extends SQLiteOpenHelper {
         }
         groupCursor.close();
 
-        String selectMembersQuery = "SELECT " + KEY_CITY_NAME + "," + KEY_CITY_LONGITUDE + "," + KEY_CITY_LATITUDE + "," + KEY_COUNTRY_NAME + "," + KEY_CONTINENT_NAME
+        String selectMembersQuery = "SELECT " + KEY_CITY_ID + "," + KEY_CITY_DEVICE + "," + KEY_CITY_NAME + "," + KEY_CITY_LONGITUDE + "," + KEY_CITY_LATITUDE + "," + KEY_COUNTRY_NAME + "," + KEY_CONTINENT_NAME + "," + KEY_COUNTRY_ID
                 + " FROM " + TABLE_GROUP + " JOIN " + TABLE_CITY_GROUP + " ON " + KEY_GROUP_ID + " =" + KEY_CITY_GROUP_GROUP
                 + " JOIN " + TABLE_CITY + " ON " + KEY_CITY_GROUP_CITY + " =" + KEY_CITY_ID
                 + " JOIN " + TABLE_COUNTRY + " ON " + KEY_CITY_COUNTRY + " =" + KEY_COUNTRY_ID
@@ -652,13 +719,16 @@ public class ACFCitiesDatabaseController extends SQLiteOpenHelper {
         if (cityCursor.moveToFirst()) {
             do {
                 ACFCity city = new ACFCity();
-                city.setCityName(cityCursor.getString(0));
+                city.setId(cityCursor.getInt(0));
+                city.setDeviceId(cityCursor.getInt(1));
+                city.setCityName(cityCursor.getString(2));
                 Location location = new Location("City");
-                location.setLongitude(cityCursor.getDouble(1));
-                location.setLatitude(cityCursor.getDouble(2));
+                location.setLongitude(cityCursor.getDouble(3));
+                location.setLatitude(cityCursor.getDouble(4));
                 city.setLocation(location);
-                city.setCountryName(cityCursor.getString(3));
-                city.setContinentName(cityCursor.getString(4));
+                city.setCountryName(cityCursor.getString(5));
+                city.setContinentName(cityCursor.getString(6));
+                city.setCountryId(cityCursor.getInt(7));
                 group.getCityList().add(city);
             } while (cityCursor.moveToNext());
         }
@@ -689,5 +759,76 @@ public class ACFCitiesDatabaseController extends SQLiteOpenHelper {
         } finally {
             db.endTransaction();
         }
+    }
+
+    public List<ACFCountry> getAllCountries(){
+        List<ACFCountry> countryList = new ArrayList<ACFCountry>();
+        String selectQuery = "SELECT " + KEY_COUNTRY_ID + "," + KEY_COUNTRY_NAME + "," + KEY_COUNTRY_CODE
+                + " FROM " + TABLE_COUNTRY + ";";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                ACFCountry country = new ACFCountry();
+                country.setId(cursor.getInt(0));
+                country.setName(cursor.getString(1));
+                country.setCode(cursor.getString(2));
+                countryList.add(country);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return countryList;
+    }
+
+    public ACFCity getCity(int id) {
+        SQLiteDatabase db = getReadableDatabase();
+        ACFCity city = null;
+        String selectVisibleCitiesQuery = "SELECT " + KEY_CITY_ID + "," + KEY_CITY_DEVICE + "," + KEY_CITY_NAME + "," + KEY_CITY_LONGITUDE + "," + KEY_CITY_LATITUDE + "," + KEY_COUNTRY_NAME + "," + KEY_CONTINENT_NAME + "," + KEY_COUNTRY_ID
+                + " FROM " + TABLE_CITY
+                + " JOIN " + TABLE_COUNTRY + " ON " + KEY_CITY_COUNTRY + " =" + KEY_COUNTRY_ID
+                + " JOIN " + TABLE_CONTINENT + " ON " + KEY_COUNTRY_CONTINENT + " =" + KEY_CONTINENT_ID
+                + " WHERE " + KEY_CITY_ID + " = "+ id + ";";
+        Cursor cityCursor = db.rawQuery(selectVisibleCitiesQuery, null);
+        if (cityCursor.moveToFirst()) {
+            do {
+                city = new ACFCity();
+                city.setId(cityCursor.getInt(0));
+                city.setDeviceId(cityCursor.getInt(1));
+                city.setCityName(cityCursor.getString(2));
+                Location location = new Location("City");
+                location.setLongitude(cityCursor.getDouble(3));
+                location.setLatitude(cityCursor.getDouble(4));
+                city.setLocation(location);
+                city.setCountryName(cityCursor.getString(5));
+                city.setContinentName(cityCursor.getString(6));
+                city.setCountryId(cityCursor.getInt(7));
+            } while (cityCursor.moveToNext());
+        }
+        cityCursor.close();
+        db.close();
+        return city;
+    }
+
+    public ACFCountry getCountry(int id) {
+        SQLiteDatabase db = getReadableDatabase();
+        ACFCountry country = null;
+        String selectVisibleCitiesQuery = "SELECT " + KEY_COUNTRY_ID + "," + KEY_COUNTRY_CODE + "," + KEY_COUNTRY_NAME
+                + " FROM " + TABLE_COUNTRY
+                + " WHERE " + KEY_COUNTRY_ID + " = "+ id + ";";
+        Cursor cityCursor = db.rawQuery(selectVisibleCitiesQuery, null);
+        if (cityCursor.moveToFirst()) {
+                country = new ACFCountry();
+                country.setId(cityCursor.getInt(0));
+                country.setCode(cityCursor.getString(1));
+                country.setName(cityCursor.getString(2));
+        }
+        cityCursor.close();
+        db.close();
+        return country;
     }
 }

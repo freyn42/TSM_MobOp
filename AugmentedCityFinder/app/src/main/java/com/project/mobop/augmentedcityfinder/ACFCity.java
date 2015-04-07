@@ -13,6 +13,8 @@ public class ACFCity implements Comparable<ACFCity>{
     private String countryName;
     private String continentName;
     private boolean showOnScreen;
+    private int deviceId;
+    private int countryId;
 
     private double distance, deltaAzimuth, deltaPitch;
     private int leftMargin, topMargin;
@@ -151,5 +153,32 @@ public class ACFCity implements Comparable<ACFCity>{
     @Override
     public int compareTo(ACFCity another) {
         return cityName.compareTo(another.getCityName());
+    }
+
+    @Override
+    public boolean equals(Object another){
+        if(!(another instanceof ACFCity)){
+            return false;
+        }
+        if (((ACFCity) another).getId() == getId())
+            return true;
+        else
+            return false;
+    }
+
+    public int getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(int deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public int getCountryId() {
+        return countryId;
+    }
+
+    public void setCountryId(int countryId) {
+        this.countryId = countryId;
     }
 }

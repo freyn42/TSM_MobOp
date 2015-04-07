@@ -15,4 +15,5 @@
     <string name="bt_delete_group_label">Delete Group</string>
     <string name="bt_exit_label">"Save and Exit"</string>
     <string name="tv_edit_group_title">Edit Group</string>
+    <string name="tv_edit_city_title">Edit City</string>
 </resources>

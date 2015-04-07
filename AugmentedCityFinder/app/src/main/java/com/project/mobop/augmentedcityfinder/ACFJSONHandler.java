@@ -11,6 +11,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSyntaxException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -76,19 +77,24 @@ public class ACFJSONHandler {
     }
 
     public JsonArray getJSONArray(String jsonString, String arrayName) throws JSONException{
-        JsonElement jelement = new JsonParser().parse(jsonString);
-        JsonObject jobject = jelement.getAsJsonObject();
-        JsonElement success = jobject.get("success");
-        if(!success.getAsBoolean()){
-            throw new JSONException("success = false");
+        try{
+            JsonElement jelement = new JsonParser().parse(jsonString);
+            JsonObject jobject = jelement.getAsJsonObject();
+            JsonElement success = jobject.get("success");
+            if(!success.getAsBoolean()){
+                throw new JSONException("success = false");
+            }
+
+            jobject = jobject.getAsJsonObject("data");
+            JsonArray jarray = jobject.getAsJsonArray(arrayName);
+            return jarray;
+        } catch(JsonSyntaxException e){
+            throw new JSONException("");
         }
 
-        jobject = jobject.getAsJsonObject("data");
-        JsonArray jarray = jobject.getAsJsonArray(arrayName);
-        return jarray;
     }
 
-    public String getJSONString(ACFCityGroup group){
+    public String getJSONPostString(ACFCityGroup group){
         JsonObject jsonobj = new JsonObject();
         jsonobj.addProperty("deviceId", group.getDeviceId());
         jsonobj.addProperty("name", group.getName());
@@ -97,6 +103,37 @@ public class ACFJSONHandler {
             array.add(new JsonPrimitive(city.getId()));
         }
         jsonobj.add("members",array);
+        return jsonobj.toString();
+    }
+
+    public String getJSONPutString(ACFCityGroup group){
+        JsonObject jsonobj = new JsonObject();
+        jsonobj.addProperty("id", group.getId());
+        jsonobj.addProperty("name", group.getName());
+        JsonArray array = new JsonArray();
+        for (ACFCity city : group.getCityList()) {
+            array.add(new JsonPrimitive(city.getId()));
+        }
+        jsonobj.add("members",array);
+        return jsonobj.toString();
+    }
+
+    public String getJSONPostString(ACFCity city){
+        JsonObject jsonobj = new JsonObject();
+        jsonobj.addProperty("deviceId", city.getDeviceId());
+        jsonobj.addProperty("name", city.getCityName());
+        jsonobj.addProperty("longitude", city.getLongitude());
+        jsonobj.addProperty("latitude", city.getLatitude());
+        jsonobj.addProperty("countryId", city.getCountryId());
+        return jsonobj.toString();
+    }
+
+    public String getJSONPutString(ACFCity city){
+        JsonObject jsonobj = new JsonObject();
+        jsonobj.addProperty("name", city.getCityName());
+        jsonobj.addProperty("longitude", city.getLongitude());
+        jsonobj.addProperty("latitude", city.getLatitude());
+        jsonobj.addProperty("countryId", city.getCountryId());
         return jsonobj.toString();
     }
 }
