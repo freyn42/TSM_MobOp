@@ -70,10 +70,10 @@ public class ACFEditGroupActivity extends Activity{
     }
 
     public void onButtonEditGroupSaveClicked(View v){
+        String groupName = etGroupName.getText().toString();
+        group.setName(groupName);
+        group.setCityList(adapter.getCheckedCities());
         if(group.getId() == 0){
-            String groupName = etGroupName.getText().toString();
-            group.setName(groupName);
-            group.setCityList(adapter.getCheckedCities());
             String response = postController.postGroupToServer(group);
             try {
                 dbController.addGroups(response);

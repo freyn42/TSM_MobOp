@@ -555,7 +555,7 @@ public class ACFCitiesDatabaseController extends SQLiteOpenHelper {
                 values.put(KEY_GROUP_MODIFICATION_DATE, jobject.get("modificationDate").getAsString());
                 values.put(KEY_GROUP_DEVICE, jobject.get("deviceId").getAsInt());
                 values.put(KEY_GROUP_NAME, jobject.get("name").getAsString());
-                db.update(TABLE_GROUP, null, KEY_GROUP_ID + " = ?", new String[] { String.valueOf(jobject.get("id").getAsInt()) });
+                db.update(TABLE_GROUP, values, KEY_GROUP_ID + " = ?", new String[] { String.valueOf(jobject.get("id").getAsInt()) });
 
                 //delete all entries with this group_id in table city_group
                 db.delete(TABLE_CITY_GROUP,KEY_CITY_GROUP_GROUP + " = ?",new String[] { String.valueOf(jobject.get("id").getAsInt()) });
