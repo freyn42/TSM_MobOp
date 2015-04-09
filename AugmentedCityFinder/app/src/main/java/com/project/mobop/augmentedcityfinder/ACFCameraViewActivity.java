@@ -72,7 +72,7 @@ public class ACFCameraViewActivity extends Activity implements View.OnClickListe
         public void onReceive(Context context, Intent intent) {
 //            Log.d(TAG, "onReceive with action: " + intent.getAction());
 
-            if (intent.getAction() == ACFCameraViewService.ACTION_UPDATE_NOTIFICATION){
+            if ((intent.getAction() == ACFCameraViewService.ACTION_UPDATE_NOTIFICATION) && (mBoundService != null)){
                 citiesList = mBoundService.getCitiesList();
                 if (intent.getStringExtra(ACFCameraViewService.EXTRA_UPDATE_SOURCE) ==
                         ACFCameraViewService.EXTRA_LOCATION){

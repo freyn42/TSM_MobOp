@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="C:\Users\Nils\Documents\Android\TSM_MobOp_Test\AugmentedCityFinder_AzimuthChange\app\libs\gson-2.3.1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="ecb6e1f8e4b0e84c4b886c2f14a1500caf309757">
+        <dex dex="C:\Users\Nils\Documents\Android\TSM_MobOp_Test\AugmentedCityFinder_AzimuthChange\app\build\intermediates\pre-dexed\debug\gson-2.3.1-041f32b78c7460f712ca16c9606e184c9e5613df.jar" />
+    </item>
+    <item
+        jar="C:\Users\Nils\Documents\Android\TSM_MobOp_Test\AugmentedCityFinder_AzimuthChange\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\21.0.3\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
+        <dex dex="C:\Users\Nils\Documents\Android\TSM_MobOp_Test\AugmentedCityFinder_AzimuthChange\app\build\intermediates\pre-dexed\debug\classes-472e623c2491e4e57b413ef52fbd54cc8ca70827.jar" />
+    </item>
+    <item
+        jar="C:\Users\Nils\Documents\Android\TSM_MobOp_Test\AugmentedCityFinder_AzimuthChange\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="C:\Users\Nils\Documents\Android\TSM_MobOp_Test\AugmentedCityFinder_AzimuthChange\app\build\intermediates\pre-dexed\debug\classes-52fd99b63edb0c7e05ad59d95c18ca362851aa04.jar" />
+    </item>
+    <item
+        jar="C:\Users\Nils\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\21.0.3\support-annotations-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
+        <dex dex="C:\Users\Nils\Documents\Android\TSM_MobOp_Test\AugmentedCityFinder_AzimuthChange\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.3-7411890620e377ceaab39483e2c7556fc6ed8ec0.jar" />
+    </item>
+    <item
+        jar="C:\Users\Nils\Documents\Android\TSM_MobOp_Test\AugmentedCityFinder_AzimuthChange\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\libs\internal_impl-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="C:\Users\Nils\Documents\Android\TSM_MobOp_Test\AugmentedCityFinder_AzimuthChange\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.3-1c223fd6d7f215c2b8aed49b0be37ba86605be8f.jar" />
+    </item>
+
+</items>

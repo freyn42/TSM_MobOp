@@ -41,13 +41,14 @@ public class ACFCameraViewService extends Service implements Observer {
     private int screenWidthPixel, screenHeightPixel;
     private int horizontalPixelDegree, verticalPixelDegree;
     private double horizontalViewAngle, verticalViewAngle;
+    private double density;
     private final double DISTANCE_TO_VIEWER = 300; // Millimeter
 
     private final String PREFS_LAST_KNOWN_LOCATION = "LastKnownLocation";
     private final String PREFS_LONGITUDE = "Longitude";
     private final String PREFS_LATITUDE = "Latitude";
 
-    private final double ANGLE_PRECISION = 0.2;
+    private final double ANGLE_PRECISION = 0.022;
 
 
     double oldAzimuth = 0;
@@ -81,6 +82,7 @@ public class ACFCameraViewService extends Service implements Observer {
         WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(dm);
 
+        // Calculating the size of the display
         screenWidthPixel = dm.widthPixels;
         screenWidthMillimeter = screenWidthPixel/dm.xdpi * 25.4;
         screenHeightPixel = dm.heightPixels;
@@ -93,8 +95,10 @@ public class ACFCameraViewService extends Service implements Observer {
                 ", screen width: " + screenWidthMillimeter +
                 ", screen height: " + screenHeightMillimeter);
 
-        horizontalViewAngle = 2.75 * Math.toDegrees(2 * Math.atan2(screenWidthMillimeter / 2, DISTANCE_TO_VIEWER));
-        verticalViewAngle = 2.75 * Math.toDegrees(2 * Math.atan2(screenHeightMillimeter / 2, DISTANCE_TO_VIEWER));
+        // Calculating viewing angle of the camera from size of the screen, distance to user and density of the display.
+        density = getApplicationContext().getResources().getDisplayMetrics().density;
+        horizontalViewAngle = density * Math.toDegrees(2 * Math.atan2(screenWidthMillimeter / 2, DISTANCE_TO_VIEWER));
+        verticalViewAngle = density * Math.toDegrees(2 * Math.atan2(screenHeightMillimeter / 2, DISTANCE_TO_VIEWER));
         Log.d(TAG, "horizontalViewAngle: " + horizontalViewAngle +
                 ", verticalViewAngle: " + verticalViewAngle);
 
