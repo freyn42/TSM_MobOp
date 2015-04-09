@@ -28,14 +28,12 @@ import java.util.List;
 public class ACFCameraViewActivity extends Activity {
     final private String TAG = "ACFCameraViewActivity";
     private FrameLayout foreground;
-//    private TextView tv_orientation, tv_location;
 
     private boolean mIsBound = false;
     private ACFCameraViewService mBoundService;
 
     private List<ACFCity> citiesList;
     private List<ACFCityPointer> cityPointerList = new ArrayList<>();
-    private List<ACFCityPointer> visibleCityPointerList;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -54,21 +52,6 @@ public class ACFCameraViewActivity extends Activity {
                 cityPointerList.add(cpTmp);
                 foreground.addView(cpTmp);
             }
-
-            mBoundService.setCityPointerList(cityPointerList);
-            visibleCityPointerList = mBoundService.getVisibleCityPointerList();
-
-//            ACFCityPointer cpTmp;
-//            for (final ACFCity city : citiesList){
-////                cpTmp = new ACFCityPointer(getApplicationContext(), city.getCityName(),
-////                        city.getCountryName(), city.getContinentName());
-//                cpTmp = new ACFCityPointer(getApplicationContext(), city);
-//                cpTmp.setDistance(city.getDistance());
-//                cpTmp.setVisibility(View.INVISIBLE);
-//
-//                cityPointerList.add(cpTmp);
-//                foreground.addView(cpTmp);
-//            }
         }
 
         @Override
@@ -84,21 +67,8 @@ public class ACFCameraViewActivity extends Activity {
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-//            Log.d(TAG, "onReceive with action: " + intent.getAction());
 
             if ((intent.getAction() == ACFCameraViewService.ACTION_UPDATE_NOTIFICATION) && (mBoundService != null)){
-//                citiesList = mBoundService.getCitiesList();
-//                Location location = mBoundService.getLocation();
-//                tv_location.setText("\nLatitude:" + (int) location.getLatitude() +
-//                        ", Longitude: " + (int) location.getLongitude() +
-//                        ", Distance: " + citiesList.get(0).getDistance());
-//                ACFOrientation orientation = mBoundService.getOrientation();
-//                tv_orientation.setText("Azimuth: " + (int) Math.toDegrees(orientation.getAzimuth()) +
-//                        ", Pitch: " + (int) Math.toDegrees(orientation.getPitch()) +
-//                        ", Roll: " + (int) Math.toDegrees(orientation.getRoll()) +
-//                        "\ndeltaAzimuth to " + citiesList.get(0).getCityName() + ": " +
-//                        (int) citiesList.get(0).getDeltaAzimuth());
-
                 ACFCityPointer cpTmp;
                 int cityEnum = 0;
                 int lastTopMargin = foreground.getHeight();
@@ -137,9 +107,6 @@ public class ACFCameraViewActivity extends Activity {
         setContentView(R.layout.activity_camera_view);
 
         foreground = (FrameLayout) findViewById(R.id.foreground);
-
-//        tv_orientation = (TextView) findViewById(R.id.tv_orientation);
-//        tv_location = (TextView) findViewById(R.id.tv_location);
     }
 
     @Override
@@ -160,14 +127,6 @@ public class ACFCameraViewActivity extends Activity {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
         super.onPause();
     }
-
-//    @Override
-//    public void onClick(View v) {
-//        Log.d(TAG, "onClick");
-//
-//        foreground.removeView(v);
-//        tv_orientation.setText("X: Gone, Y: Gone");
-//    }
 
     void bindService() {
         Log.d(TAG, "bindService");

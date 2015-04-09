@@ -38,9 +38,6 @@ public class ACFCameraViewService extends Service implements Observer {
 
     private List<ACFCity> citiesList = new ArrayList<>();
 
-    private List<ACFCityPointer> cityPointerList = new ArrayList<>();
-    private List<ACFCityPointer> visibleCityPointerList = new ArrayList<>();
-
     private double screenWidthMillimeter, screenHeightMillimeter;
     private int screenWidthPixel, screenHeightPixel;
     private int horizontalPixelDegree, verticalPixelDegree;
@@ -205,49 +202,6 @@ public class ACFCameraViewService extends Service implements Observer {
 
     private void positionCalculations(){
         if (location != null){
-            ACFCity cityTmp;
-            for (ACFCityPointer cityPointer : cityPointerList) {
-                cityTmp = cityPointer.getCity();
-
-                // Update distance to city
-                cityTmp.setDistance(location.distanceTo(cityTmp.getLocation()));
-
-                // Calculate orientation to city
-                double bearing = location.bearingTo(cityTmp.getLocation());
-                if (bearing > 180){
-                    bearing = bearing - 360;
-                }
-                double azimuth = Math.toDegrees(orientation.getAzimuth());
-                double deltaAzimuth = azimuth - bearing;
-                cityTmp.setDeltaAzimuth(deltaAzimuth);
-                cityTmp.setDeltaPitch(0);
-
-                if (Math.abs(deltaAzimuth) < ((horizontalViewAngle / 2) + cityPointer.getCityPointerWidth())){
-                    if (cityTmp.isInView()){
-
-                    }else {
-                        visibleCityPointerList.add(cityPointer);
-                        int topMargin = (int) ((screenHeightPixel / 2) - 25);
-                        cityTmp.setTopMargin(topMargin);
-                    }
-                    int leftMargin = (int) ((screenWidthPixel / 2) +
-                            (horizontalPixelDegree * ((int) -cityTmp.getDeltaAzimuth())) - 25);
-                    cityTmp.setLeftMargin(leftMargin);
-                    cityTmp.setInView(true);
-                }else{
-                    if (cityTmp.isInView()){
-                        visibleCityPointerList.remove(cityPointer);
-                        cityTmp.setInView(false);
-                    }
-                }
-
-                // Update city pointer position
-                if (cityTmp.isInView()){
-
-
-                }
-
-            }
             for (ACFCity city : citiesList){
 
                 // Update distance to city
@@ -263,7 +217,7 @@ public class ACFCameraViewService extends Service implements Observer {
                 city.setDeltaAzimuth(deltaAzimuth);
                 city.setDeltaPitch(0);
 
-                if (Math.abs(deltaAzimuth) < (horizontalViewAngle / 2)){
+                if (Math.abs(deltaAzimuth) < ((horizontalViewAngle / 2) * 1.5)){
                     city.setInView(true);
                 }else{
                     city.setInView(false);
@@ -300,14 +254,5 @@ public class ACFCameraViewService extends Service implements Observer {
 
     public List<ACFCity> getCitiesList() {
         return citiesList;
-    }
-
-    public void setCityPointerList(List<ACFCityPointer> cityPointerList) {
-        this.cityPointerList = cityPointerList;
-    }
-
-
-    public List<ACFCityPointer> getVisibleCityPointerList() {
-        return visibleCityPointerList;
     }
 }
