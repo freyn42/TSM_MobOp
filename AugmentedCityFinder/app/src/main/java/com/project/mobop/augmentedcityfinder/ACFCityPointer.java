@@ -42,11 +42,10 @@ public class ACFCityPointer extends LinearLayout implements View.OnClickListener
     private TextView tvDistance;
 
     private boolean expanded = false;
-
     private int leftMargin, topMargin;
     private int cityPointerHeight, cityPointerWidth;
-
     private ACFCity city;
+    private static int usageId;
 
     public ACFCityPointer(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -292,6 +291,14 @@ public class ACFCityPointer extends LinearLayout implements View.OnClickListener
         this.city = city;
     }
 
+    public static int getUsageId() {
+        return usageId;
+    }
+
+    public static void setUsageId(int usageId) {
+        ACFCityPointer.usageId = usageId;
+    }
+
     /***********************************************************************************************
     * Event listener methods
     ***********************************************************************************************/
@@ -306,6 +313,12 @@ public class ACFCityPointer extends LinearLayout implements View.OnClickListener
             tvCountryName.setVisibility(View.VISIBLE);
             tvContinentName.setVisibility(View.VISIBLE);
         }
+
+//        if ((usageId != 0) && (city.getLocation() != null)){
+//            //Post UsageCity
+//            ACFRestPOSTController postController = new ACFRestPOSTController(context);
+//            boolean result = postController.postUsageLocationCity(usageId, city);
+//        }
     }
 
     @Override
