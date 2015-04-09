@@ -13,7 +13,7 @@ public class DeviceRI {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCities(){
+    public Response getDevices(){
         try{
             return rb.buildDeviceResponse(this.db.createDevice());
         }

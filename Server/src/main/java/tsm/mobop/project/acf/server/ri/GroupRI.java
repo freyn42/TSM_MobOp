@@ -48,6 +48,18 @@ public class GroupRI {
         }
     }
 
+    @PUT
+    @Path("/{deviceId}/{groupId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateGroup(@PathParam("deviceId") long deviceId, @PathParam("groupId") long groupId, Group group){
+        try{
+            return rb.buildGroupResponse(this.db.updateGroup(deviceId, groupId, group));
+        }
+        catch(Exception e){
+            return rb.buildExceptionResponse(e);
+        }
+    }
+
     @DELETE
     @Path("/{deviceId}/{groupId}")
     @Produces(MediaType.APPLICATION_JSON)
