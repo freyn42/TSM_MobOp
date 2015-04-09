@@ -30,18 +30,6 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         dbController = new ACFCitiesDatabaseController(this);
-
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        // Define the criteria how to select the locatioin provider -> use
-        // default
-        Criteria criteria = new Criteria();
-        String provider = locationManager.getBestProvider(criteria, false);
-        Location location = new Location(provider);
-        location.setLongitude(4);
-        location.setLatitude(4);
-
-
-
     }
 
     @Override
@@ -69,22 +57,6 @@ public class MainActivity extends ActionBarActivity {
         super.onPause();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     public boolean isConnected(){
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);

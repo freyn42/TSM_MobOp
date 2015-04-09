@@ -25,16 +25,17 @@ import java.util.List;
 /**
  * Created by Nils on 08.03.2015.
  */
-public class ACFCameraViewActivity extends Activity implements View.OnClickListener {
+public class ACFCameraViewActivity extends Activity {
     final private String TAG = "ACFCameraViewActivity";
     private FrameLayout foreground;
-    private TextView tv_orientation, tv_location;
+//    private TextView tv_orientation, tv_location;
 
     private boolean mIsBound = false;
     private ACFCameraViewService mBoundService;
 
     private List<ACFCity> citiesList;
     private List<ACFCityPointer> cityPointerList = new ArrayList<>();
+    private List<ACFCityPointer> visibleCityPointerList;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -47,14 +48,27 @@ public class ACFCameraViewActivity extends Activity implements View.OnClickListe
 
             ACFCityPointer cpTmp;
             for (final ACFCity city : citiesList){
-                cpTmp = new ACFCityPointer(getApplicationContext(), city.getCityName(),
-                        city.getCountryName(), city.getContinentName());
-                cpTmp.setDistance(city.getDistance());
+                cpTmp = new ACFCityPointer(getApplicationContext(), city);
                 cpTmp.setVisibility(View.INVISIBLE);
 
                 cityPointerList.add(cpTmp);
                 foreground.addView(cpTmp);
             }
+
+            mBoundService.setCityPointerList(cityPointerList);
+            visibleCityPointerList = mBoundService.getVisibleCityPointerList();
+
+//            ACFCityPointer cpTmp;
+//            for (final ACFCity city : citiesList){
+////                cpTmp = new ACFCityPointer(getApplicationContext(), city.getCityName(),
+////                        city.getCountryName(), city.getContinentName());
+//                cpTmp = new ACFCityPointer(getApplicationContext(), city);
+//                cpTmp.setDistance(city.getDistance());
+//                cpTmp.setVisibility(View.INVISIBLE);
+//
+//                cityPointerList.add(cpTmp);
+//                foreground.addView(cpTmp);
+//            }
         }
 
         @Override
@@ -62,7 +76,7 @@ public class ACFCameraViewActivity extends Activity implements View.OnClickListe
             Log.d(TAG, "onServiceDisconnected");
 
             // This is called when the connection with the service has been
-            // unexpectedly disconnected -- that is, its process crashed.
+            // unexpectedly disconnected (i.e. its process crashed).
             mBoundService = null;
         }
     };
@@ -72,48 +86,43 @@ public class ACFCameraViewActivity extends Activity implements View.OnClickListe
         public void onReceive(Context context, Intent intent) {
 //            Log.d(TAG, "onReceive with action: " + intent.getAction());
 
-            if (intent.getAction() == ACFCameraViewService.ACTION_UPDATE_NOTIFICATION){
-                citiesList = mBoundService.getCitiesList();
-                if (intent.getStringExtra(ACFCameraViewService.EXTRA_UPDATE_SOURCE) ==
-                        ACFCameraViewService.EXTRA_LOCATION){
-                    Location location = mBoundService.getLocation();
-                    tv_location.setText("\nLatitude:" + (int) location.getLatitude() +
-                            ", Longitude: " + (int) location.getLongitude() +
-                            ", Distance: " + citiesList.get(0).getDistance());
-                }else if (intent.getStringExtra(ACFCameraViewService.EXTRA_UPDATE_SOURCE) ==
-                        ACFCameraViewService.EXTRA_ORIENTATION){
-                    ACFOrientation orientation = mBoundService.getOrientation();
-                    tv_orientation.setText("Azimuth: " + (int) Math.toDegrees(orientation.getAzimuth()) +
-                            ", Pitch: " + (int) Math.toDegrees(orientation.getPitch()) +
-                            ", Roll: " + (int) Math.toDegrees(orientation.getRoll()) +
-                            "\ndeltaAzimuth to " + citiesList.get(0).getCityName() + ": " +
-                            (int) citiesList.get(0).getDeltaAzimuth());
+            if ((intent.getAction() == ACFCameraViewService.ACTION_UPDATE_NOTIFICATION) && (mBoundService != null)){
+//                citiesList = mBoundService.getCitiesList();
+//                Location location = mBoundService.getLocation();
+//                tv_location.setText("\nLatitude:" + (int) location.getLatitude() +
+//                        ", Longitude: " + (int) location.getLongitude() +
+//                        ", Distance: " + citiesList.get(0).getDistance());
+//                ACFOrientation orientation = mBoundService.getOrientation();
+//                tv_orientation.setText("Azimuth: " + (int) Math.toDegrees(orientation.getAzimuth()) +
+//                        ", Pitch: " + (int) Math.toDegrees(orientation.getPitch()) +
+//                        ", Roll: " + (int) Math.toDegrees(orientation.getRoll()) +
+//                        "\ndeltaAzimuth to " + citiesList.get(0).getCityName() + ": " +
+//                        (int) citiesList.get(0).getDeltaAzimuth());
 
-                    ACFCityPointer cpTmp;
-                    int cityEnum = 0;
-                    int lastTopMargin = foreground.getHeight();
-                    for (ACFCity city : citiesList){
-                        cpTmp = cityPointerList.get(cityEnum);
-                        if (city.isInView()){
-                            cpTmp.setDistance(city.getDistance());
+                ACFCityPointer cpTmp;
+                int cityEnum = 0;
+                int lastTopMargin = foreground.getHeight();
+                for (ACFCity city : citiesList){
+                    cpTmp = cityPointerList.get(cityEnum);
+                    if (city.isInView()){
+                        cpTmp.setDistance(city.getDistance());
 
-                            cpTmp.setLeftMargin(city.getLeftMargin());
+                        cpTmp.setLeftMargin(city.getLeftMargin());
 
-                            int height = cpTmp.getCityPointerHeight();
-                            if ((lastTopMargin - (height)) < 0){
-                                lastTopMargin = foreground.getHeight();
-                            }
-                            int currentTopMargin = lastTopMargin - (height);
-                            cpTmp.setTopMargin(currentTopMargin);
-                            //cpTmp.setTopMargin(300);
-                            lastTopMargin = currentTopMargin;
-
-                            cpTmp.setVisibility(View.VISIBLE);
-                        }else{
-                            cpTmp.setVisibility(View.INVISIBLE);
+                        int height = cpTmp.getCityPointerHeight();
+                        if ((lastTopMargin - (height)) < 0){
+                            lastTopMargin = foreground.getHeight();
                         }
-                        cityEnum++;
+                        int currentTopMargin = lastTopMargin - (height);
+                        cpTmp.setTopMargin(currentTopMargin);
+                        //cpTmp.setTopMargin(300);
+                        lastTopMargin = currentTopMargin;
+
+                        cpTmp.setVisibility(View.VISIBLE);
+                    }else{
+                        cpTmp.setVisibility(View.INVISIBLE);
                     }
+                    cityEnum++;
                 }
             }
         }
@@ -129,8 +138,8 @@ public class ACFCameraViewActivity extends Activity implements View.OnClickListe
 
         foreground = (FrameLayout) findViewById(R.id.foreground);
 
-        tv_orientation = (TextView) findViewById(R.id.tv_orientation);
-        tv_location = (TextView) findViewById(R.id.tv_location);
+//        tv_orientation = (TextView) findViewById(R.id.tv_orientation);
+//        tv_location = (TextView) findViewById(R.id.tv_location);
     }
 
     @Override
@@ -152,13 +161,13 @@ public class ACFCameraViewActivity extends Activity implements View.OnClickListe
         super.onPause();
     }
 
-    @Override
-    public void onClick(View v) {
-        Log.d(TAG, "onClick");
-
-        foreground.removeView(v);
-        tv_orientation.setText("X: Gone, Y: Gone");
-    }
+//    @Override
+//    public void onClick(View v) {
+//        Log.d(TAG, "onClick");
+//
+//        foreground.removeView(v);
+//        tv_orientation.setText("X: Gone, Y: Gone");
+//    }
 
     void bindService() {
         Log.d(TAG, "bindService");

@@ -27,6 +27,7 @@ import java.util.Random;
 public class ACFCityPointer extends LinearLayout implements View.OnClickListener, View.OnLongClickListener{
     private Context context;
     private final String TAG = "ACFCityPointer";
+    private final int TEXT_SIZE = 20;
 
     private ImageView ivPointerFlag;
     private ImageView ivCountryFlag;
@@ -42,12 +43,10 @@ public class ACFCityPointer extends LinearLayout implements View.OnClickListener
 
     private boolean expanded = false;
 
-    private final int TEXT_SIZE = 20;
+    private int leftMargin, topMargin;
+    private int cityPointerHeight, cityPointerWidth;
 
-    private int leftMargin;
-    private int topMargin;
-    private int cityPointerHeight;
-    private int cityPointerWidth;
+    private ACFCity city;
 
     public ACFCityPointer(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -75,6 +74,23 @@ public class ACFCityPointer extends LinearLayout implements View.OnClickListener
         constructCityPointer();
     }
 
+    public ACFCityPointer(Context context, ACFCity city) {
+        super(context);
+
+        this.context = context;
+        this.city = city;
+
+        this.cityName = city.getCityName();
+        this.countryName = city.getCountryName();
+        this.continentName = city.getContinentName();
+        this.distance = city.getDistance();
+
+        setOnClickListener(this);
+        setOnLongClickListener(this);
+
+        constructCityPointer();
+    }
+
     private void constructCityPointer(){
         // Calculate text height in pixel
         float density = context.getApplicationContext().getResources().getDisplayMetrics().density;
@@ -83,9 +99,6 @@ public class ACFCityPointer extends LinearLayout implements View.OnClickListener
         Rect textBounds = new Rect();
         textPaint.getTextBounds("Py", 0, 2, textBounds);
         int textHeight = (int) Math.round(textBounds.height() * density);
-
-        // Height of total city pointer
-        this.cityPointerHeight = 4*textHeight;
 
         // Base layout
         setOrientation(VERTICAL);
@@ -96,7 +109,13 @@ public class ACFCityPointer extends LinearLayout implements View.OnClickListener
         // Components in layout
         TableRow.LayoutParams tableParams;
         Random rnd = new Random();
-        int col = Color.rgb(rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+        int r = rnd.nextInt(256);
+        int g = rnd.nextInt(256);
+        int b = rnd.nextInt(256);
+        int col = Color.argb(255, r, g, b);
+        int invCol = Color.argb(100, 255-r, 255-g, 255-b);
+
+        setBackgroundColor(invCol);
 
         // First row with pointer flag, city name and country flag
         LinearLayout imageHolder = new LinearLayout(context);
@@ -143,7 +162,7 @@ public class ACFCityPointer extends LinearLayout implements View.OnClickListener
         tvCountryName.setTextSize(TEXT_SIZE);
         tvCountryName.setTextColor(col);
         tvCountryName.setLines(1);
-        tvCountryName.setVisibility(View.GONE);
+        tvCountryName.setVisibility(View.INVISIBLE);
         addView(tvCountryName);
 
         // Third row with continent name
@@ -152,7 +171,7 @@ public class ACFCityPointer extends LinearLayout implements View.OnClickListener
         tvContinentName.setTextSize(TEXT_SIZE);
         tvContinentName.setTextColor(col);
         tvContinentName.setLines(1);
-        tvContinentName.setVisibility(View.GONE);
+        tvContinentName.setVisibility(View.INVISIBLE);
         addView(tvContinentName);
 
         // Fourth row with distance
@@ -168,14 +187,26 @@ public class ACFCityPointer extends LinearLayout implements View.OnClickListener
         tvDistance.setLines(1);
         tvDistance.setVisibility(View.VISIBLE);
         addView(tvDistance);
+
+        addOnLayoutChangeListener(new OnLayoutChangeListener(){
+            boolean isFirstCall = true;
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                if (isFirstCall) {
+                    cityPointerHeight = getHeight();
+                    tvCountryName.setVisibility(View.GONE);
+                    tvContinentName.setVisibility(View.GONE);
+                    isFirstCall = false;
+                }
+                cityPointerWidth = getWidth();
+            }
+        });
     }
 
 
-
-
-/***************************************************************************************************
- * Getter and setter methods for private fields.
- **************************************************************************************************/
+    /***********************************************************************************************
+    * Getter and setter methods for private fields.
+    ***********************************************************************************************/
     public String getCityName() {
         return cityName;
     }
@@ -253,9 +284,17 @@ public class ACFCityPointer extends LinearLayout implements View.OnClickListener
         return cityPointerWidth;
     }
 
-/***************************************************************************************************
- * Event listener methods
- **************************************************************************************************/
+    public ACFCity getCity() {
+        return city;
+    }
+
+    public void setCity(ACFCity city) {
+        this.city = city;
+    }
+
+    /***********************************************************************************************
+    * Event listener methods
+    ***********************************************************************************************/
     @Override
     public void onClick(View v) {
         if (expanded){
