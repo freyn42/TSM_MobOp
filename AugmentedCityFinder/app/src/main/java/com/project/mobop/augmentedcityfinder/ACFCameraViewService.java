@@ -201,12 +201,12 @@ public class ACFCameraViewService extends Service implements Observer {
             }
         }else if (observable == locationObservable){
             location = (Location) data;
-            if ((!locationFixed) &&(location != null)){
+            if ((!locationFixed) && (location != null)){
 //                //Post UsageLocation
 //                ACFRestPOSTController postController = new ACFRestPOSTController(this);
 //                int usageId = postController.postUsageLocation(location);
 //                ACFCityPointer.setUsageId(usageId);
-//                Toast.makeText(getApplicationContext(), "Location fixed!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Location fixed!", Toast.LENGTH_LONG).show();
                 locationFixed = true;
             }
         }
