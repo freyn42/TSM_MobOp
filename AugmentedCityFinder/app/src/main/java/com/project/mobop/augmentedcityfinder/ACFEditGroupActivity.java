@@ -48,8 +48,8 @@ public class ACFEditGroupActivity extends Activity{
 
         dbController = new ACFCitiesDatabaseController(this);
 
-        postController = new ACFRestPOSTController(this,dbController);
-        putController = new ACFRestPUTController(this,dbController);
+        postController = new ACFRestPOSTController(this);
+        putController = new ACFRestPUTController(this);
 
         lv_edit_cities = (ListView)findViewById(R.id.lv_edit_group_cities);
         List<ACFCity> cities = dbController.getAllCities();
@@ -75,10 +75,16 @@ public class ACFEditGroupActivity extends Activity{
         group.setCityList(adapter.getCheckedCities());
         if(group.getId() == 0){
             String response = postController.postGroupToServer(group);
-            try {
-                dbController.addGroups(response);
-            } catch (JSONException e) {
-                Toast.makeText(this, "Error saving City to Database:\n" + response, Toast.LENGTH_SHORT).show();
+            if(response != null && !response.isEmpty()) {
+                try {
+                    dbController.addGroups(response);
+                } catch (JSONException e) {
+                    Toast.makeText(this, "Fehler beim Erstellen der Gruppe auf dem Server:\n" + response, Toast.LENGTH_SHORT).show();
+                } catch (ACFDatabaseException e) {
+                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "Leere Antwort des Servers",Toast.LENGTH_SHORT).show();
             }
         } else {
             String response = putController.putGroupToServer(group);
@@ -86,8 +92,12 @@ public class ACFEditGroupActivity extends Activity{
                 try {
                     dbController.updateGroups(response);
                 } catch (JSONException e) {
-                    Toast.makeText(this, "Error saving City to Database:\n" + response, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Fehler beim Erstellen der Gruppe auf dem Server:\n" + response, Toast.LENGTH_SHORT).show();
+                } catch (ACFDatabaseException e) {
+                    Toast.makeText(this,e.getMessage(),Toast.LENGTH_SHORT).show();
                 }
+            } else {
+                Toast.makeText(this, "Leere Antwort des Servers",Toast.LENGTH_SHORT).show();
             }
         }
         finish();

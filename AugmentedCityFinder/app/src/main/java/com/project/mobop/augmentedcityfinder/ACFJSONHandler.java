@@ -36,46 +36,6 @@ public class ACFJSONHandler {
         this.context = context;
     }
 
-    public void importCity(JSONObject city){
-
-    }
-
-    public void importCitiesFromFile(SQLiteDatabase db) throws IOException{
-        InputStream is = context.getResources().openRawResource(R.raw.cities_europe);
-        Writer writer = new StringWriter();
-        char[] buffer = new char[1024];
-        try {
-            Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-            int n;
-            while ((n = reader.read(buffer)) != -1) {
-                writer.write(buffer, 0, n);
-            }
-        } finally {
-            is.close();
-        }
-
-        ACFCitiesDatabaseController dbController = new ACFCitiesDatabaseController(context);
-
-        String jsonString = writer.toString();
-
-        JsonElement jelement = new JsonParser().parse(jsonString);
-        JsonObject jobject = jelement.getAsJsonObject();
-        //jobject = jobject.getAsJsonObject("cities");
-        JsonArray jarray = jobject.getAsJsonArray("cities");
-        for(int i = 0; i < jarray.size(); i++){
-            jobject = jarray.get(i).getAsJsonObject();
-            ACFCity city = new ACFCity();
-            city.setCityName(jobject.get("city_name").getAsString());
-            city.setCountryName(jobject.get("city_country").getAsString());
-            Location location = new Location("city");
-            location.setLatitude(jobject.get("city_latitude").getAsDouble());
-            location.setLongitude(jobject.get("city_longitude").getAsDouble());
-            city.setLocation(location);
-            city.setContinentName(jobject.get("city_continent").getAsString());
-            dbController.addCity(city,db);
-        }
-    }
-
     public JsonArray getJSONArray(String jsonString, String arrayName) throws JSONException{
         try{
             JsonElement jelement = new JsonParser().parse(jsonString);
@@ -89,6 +49,8 @@ public class ACFJSONHandler {
             JsonArray jarray = jobject.getAsJsonArray(arrayName);
             return jarray;
         } catch(JsonSyntaxException e){
+            throw new JSONException("");
+        } catch(Exception any){
             throw new JSONException("");
         }
 
@@ -134,6 +96,45 @@ public class ACFJSONHandler {
         jsonobj.addProperty("longitude", city.getLongitude());
         jsonobj.addProperty("latitude", city.getLatitude());
         jsonobj.addProperty("countryId", city.getCountryId());
+        return jsonobj.toString();
+    }
+
+    public boolean checkSuccess(String jsonString){
+        JsonElement jelement = new JsonParser().parse(jsonString);
+        JsonObject jobject = jelement.getAsJsonObject();
+        JsonElement success = jobject.get("success");
+        if(success.getAsBoolean()){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public String getJSONPostStringForUsage(Location location) {
+        ACFCitiesDatabaseController dbController = new ACFCitiesDatabaseController(context);
+        JsonObject jsonobj = new JsonObject();
+        jsonobj.addProperty("deviceId",dbController.getDeviceId());
+        jsonobj.addProperty("latitude",location.getLatitude());
+        jsonobj.addProperty("longitude",location.getLongitude());
+        return jsonobj.toString();
+    }
+
+    public int getUsageLocationId(String jsonString) throws JSONException{
+        JsonElement jelement = new JsonParser().parse(jsonString);
+        JsonObject jobject = jelement.getAsJsonObject();
+        JsonElement success = jobject.get("success");
+        if(!success.getAsBoolean()){
+            throw new JSONException("success = false");
+        }
+        jobject = jobject.getAsJsonObject("data");
+        return jobject.get("userLocationId").getAsInt();
+    }
+
+    public String getJSONPostStringForUsage(int usageLocationId, ACFCity city) {
+        ACFCitiesDatabaseController dbController = new ACFCitiesDatabaseController(context);
+        JsonObject jsonobj = new JsonObject();
+        jsonobj.addProperty("userLocationId",usageLocationId);
+        jsonobj.addProperty("cityId",city.getId());
         return jsonobj.toString();
     }
 }

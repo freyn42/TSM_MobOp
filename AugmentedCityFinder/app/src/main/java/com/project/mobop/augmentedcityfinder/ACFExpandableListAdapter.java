@@ -142,7 +142,11 @@ public class ACFExpandableListAdapter extends BaseExpandableListAdapter {
             } else {
                 group.setVisible(false);
             }
-            dbController.updateGroupVisibility(group);
+            try {
+                dbController.updateGroupVisibility(group);
+            } catch (ACFDatabaseException e) {
+                Toast.makeText(context,e.getMessage(),Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

@@ -2,16 +2,16 @@ package com.project.mobop.augmentedcityfinder;
 
 import android.app.Activity;
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,44 +22,40 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /**
- * Created by tom on 05.04.2015.
+ * Created by tom on 07.04.2015.
  */
-public class ACFRestGETController {
+public class ACFRestDELETEController {
 
     private final Context context;
 
-    public ACFRestGETController(Context context){
+    public ACFRestDELETEController(Context context){
         this.context = context;
     }
 
-    public String getContinentsFromServer() throws JSONException {
-        String result = GET("http://acf-mobop.rhcloud.com/rest/continent");
+    public String deleteGroupFromServer(ACFCityGroup group) {
+        String result = "";
+        String url = "http://acf-mobop.rhcloud.com/rest/group/"+group.getDeviceId()+"/"+group.getId();
+        result = DELETE(url);
         return result;
     }
 
-    public String getCountriesFromServer() throws JSONException {
-        String result = GET("http://acf-mobop.rhcloud.com/rest/country");
+    public String deleteCityFromServer(ACFCity city) {
+        String result = "";
+        String url = "http://acf-mobop.rhcloud.com/rest/city/"+city.getDeviceId()+"/"+city.getId();
+        result = DELETE(url);
         return result;
     }
 
-    public String getCitiesFromServer() throws JSONException {
-        String result = GET("http://acf-mobop.rhcloud.com/rest/city");
-        return result;
-    }
-
-    public String getGroupsFromServer() throws JSONException {
-        String result = GET("http://acf-mobop.rhcloud.com/rest/group");
-        return result;
-    }
-
-    public String GET(String url){
+    public String DELETE(String url){
         InputStream inputStream = null;
         String result = "";
         try {
 
             HttpClient httpclient = new DefaultHttpClient();
 
-            HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
+            HttpDelete deleteRequest = new HttpDelete(url);
+
+            HttpResponse httpResponse = httpclient.execute(deleteRequest);
 
             inputStream = httpResponse.getEntity().getContent();
 
@@ -69,8 +65,11 @@ public class ACFRestGETController {
                 result = "Did not work!";
 
         } catch (Exception e) {
+
         }
+
         return result;
+
     }
 
     private static String convertInputStreamToString(InputStream inputStream) throws IOException {
@@ -79,9 +78,8 @@ public class ACFRestGETController {
         String result = "";
         while((line = bufferedReader.readLine()) != null)
             result += line;
-
         inputStream.close();
         return result;
-
     }
+
 }

@@ -1,12 +1,10 @@
 package com.project.mobop.augmentedcityfinder;
 
-import android.app.Activity;
+import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.internal.widget.AdapterViewCompat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ExpandableListView;
@@ -31,7 +29,6 @@ public class ACFCitySettingsActivity extends FragmentActivity implements ACFModi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city_settings);
 
-        // get the listview
         expListView = (ExpandableListView) findViewById(R.id.lv_groups);
 
     }
@@ -43,7 +40,6 @@ public class ACFCitySettingsActivity extends FragmentActivity implements ACFModi
 
         listAdapter = new ACFExpandableListAdapter(this, listDataHeader, listDataChild);
 
-        // setting list adapter
         expListView.setAdapter(listAdapter);
         expListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -61,7 +57,7 @@ public class ACFCitySettingsActivity extends FragmentActivity implements ACFModi
                         dialog.setCity(city);
                         dialog.show(getSupportFragmentManager(), "ACFModifyChoiceDialog");
                     }
-                    return true; //true if we consumed the click, false if not
+                    return true;
 
                 } else if (itemType == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
                     int groupPosition = ExpandableListView.getPackedPositionGroup(id);
@@ -73,10 +69,9 @@ public class ACFCitySettingsActivity extends FragmentActivity implements ACFModi
                         dialog.setGroup(group);
                         dialog.show(getSupportFragmentManager(), "ACFModifyChoiceDialog");
                     }
-                    return true; //true if we consumed the click, false if not
+                    return true;
 
                 } else {
-                    // null item; we don't consume the click
                     return false;
                 }
             }
@@ -132,10 +127,50 @@ public class ACFCitySettingsActivity extends FragmentActivity implements ACFModi
 
     @Override
     public void onDialogNegativeClick(DialogFragment dialog) {
-        if(((ACFModifyChoiceDialog)dialog).getCity() != null){
-            Toast.makeText(this,"Löschen von Städten noch nicht implmementiert",Toast.LENGTH_SHORT).show();
-        } else if(((ACFModifyChoiceDialog)dialog).getGroup() != null){
-            Toast.makeText(this,"Löschen von Gruppen noch nicht implmementiert",Toast.LENGTH_SHORT).show();
-        }
+        AsyncTask task = new AsyncTask<Object,Void,Void>() {
+            @Override
+            protected Void doInBackground(Object... object) {
+                ACFCitiesDatabaseController dbController = new ACFCitiesDatabaseController(ACFCitySettingsActivity.this);
+                ACFRestDELETEController deleteController = new ACFRestDELETEController(ACFCitySettingsActivity.this);
+                ACFJSONHandler jsonHandler = new ACFJSONHandler(ACFCitySettingsActivity.this);
+                ACFCity city = ((ACFModifyChoiceDialog)object[0]).getCity();
+                ACFCityGroup group = ((ACFModifyChoiceDialog)object[0]).getGroup();
+                if(city != null){
+                    String response = deleteController.deleteCityFromServer(city);
+                    if(jsonHandler.checkSuccess(response)){
+                        try {
+                            dbController.deleteCity(city);
+                        } catch (ACFDatabaseException e) {
+                            final String msg = e.getMessage();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(ACFCitySettingsActivity.this, msg, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+
+                } else if(group != null){
+                    String response = deleteController.deleteGroupFromServer(group);
+                    if(jsonHandler.checkSuccess(response)){
+                        try {
+                            dbController.deleteGroup(group);
+                        } catch (ACFDatabaseException e) {
+                            Toast.makeText(ACFCitySettingsActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void v) {
+                super.onPostExecute(v);
+                onResume();
+            }
+        };
+        task.execute(dialog);
+
     }
 }

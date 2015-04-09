@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -25,11 +26,9 @@ import java.util.concurrent.TimeoutException;
 public class ACFRestPUTController {
 
     private final Context context;
-    private ACFCitiesDatabaseController dbController;
 
-    public ACFRestPUTController(Context context, ACFCitiesDatabaseController dbController){
+    public ACFRestPUTController(Context context){
         this.context = context;
-        this.dbController = dbController;
     }
 
     public String putGroupToServer(ACFCityGroup group) {
@@ -42,11 +41,11 @@ public class ACFRestPUTController {
         try {
             result = task.get(5000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
-            ((Activity)context).finish();
+            Toast.makeText(context, "InterruptedException in PUT to Server", Toast.LENGTH_SHORT).show();
         } catch (ExecutionException e) {
-            ((Activity)context).finish();
+            Toast.makeText(context, "ExecutionException in PUT to Server",Toast.LENGTH_SHORT).show();
         } catch (TimeoutException e) {
-            ((Activity)context).finish();
+            Toast.makeText(context, "Timeout in PUT to Server",Toast.LENGTH_SHORT).show();
         }
         return result;
     }
@@ -61,11 +60,11 @@ public class ACFRestPUTController {
         try {
             result = task.get(5000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
-            ((Activity)context).finish();
+            Toast.makeText(context, "InterruptedException in PUT to Server", Toast.LENGTH_SHORT).show();
         } catch (ExecutionException e) {
-            ((Activity)context).finish();
+            Toast.makeText(context, "ExecutionException in PUT to Server",Toast.LENGTH_SHORT).show();
         } catch (TimeoutException e) {
-            ((Activity)context).finish();
+            Toast.makeText(context, "Timeout in PUT to Server",Toast.LENGTH_SHORT).show();
         }
         return result;
     }
@@ -75,10 +74,8 @@ public class ACFRestPUTController {
         String result = "";
         try {
 
-            // create HttpClient
             HttpClient httpclient = new DefaultHttpClient();
 
-            // make POST request to the given URL
             HttpPut putRequest = new HttpPut(url);
 
             if(jsonString != null){
@@ -88,17 +85,15 @@ public class ACFRestPUTController {
 
             HttpResponse httpResponse = httpclient.execute(putRequest);
 
-            // receive response as inputStream
             inputStream = httpResponse.getEntity().getContent();
 
-            // convert inputstream to string
             if(inputStream != null)
                 result = convertInputStreamToString(inputStream);
             else
                 result = "Did not work!";
 
         } catch (Exception e) {
-            Log.d("InputStream", e.getMessage());
+
         }
 
         return result;
@@ -128,12 +123,5 @@ public class ACFRestPUTController {
             return PUT(urls[0], values);
         }
 
-        public String getValues() {
-            return values;
-        }
-
-        public void setValues(String values) {
-            this.values = values;
-        }
     }
 }

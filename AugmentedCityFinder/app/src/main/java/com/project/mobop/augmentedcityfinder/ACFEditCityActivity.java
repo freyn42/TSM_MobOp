@@ -46,8 +46,8 @@ public class ACFEditCityActivity extends Activity{
 
         dbController = new ACFCitiesDatabaseController(this);
 
-        postController = new ACFRestPOSTController(this,dbController);
-        putController = new ACFRestPUTController(this,dbController);
+        postController = new ACFRestPOSTController(this);
+        putController = new ACFRestPUTController(this);
 
         etCityName = (EditText)findViewById(R.id.et_edit_city_name);
         etLongitude = (EditText)findViewById(R.id.et_edit_city_longitude);
@@ -103,10 +103,12 @@ public class ACFEditCityActivity extends Activity{
                 try {
                     dbController.addCities(response);
                 } catch (JSONException e) {
-                     Toast.makeText(this, "Error saving City to Database",Toast.LENGTH_SHORT).show();
+                     Toast.makeText(this, "Fehler beim Erstellen der Stadt auf dem Server",Toast.LENGTH_SHORT).show();
+                } catch (ACFDatabaseException e){
+                    Toast.makeText(this, e.getMessage(),Toast.LENGTH_SHORT).show();
                 }
             }else {
-                Toast.makeText(this, "Empty Response From Server",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Leere Antwort des Servers",Toast.LENGTH_SHORT).show();
             }
         } else {
             String cityName = etCityName.getText().toString();
@@ -120,10 +122,12 @@ public class ACFEditCityActivity extends Activity{
                 try {
                     dbController.updateCities(response);
                 } catch (JSONException e) {
-                    Toast.makeText(this, "Error saving City to Database",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Fehler beim Erstellen der Stadt auf dem Server",Toast.LENGTH_SHORT).show();
+                } catch (ACFDatabaseException e) {
+                    Toast.makeText(this,e.getMessage(),Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(this, "Empty Response From Server",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Leere Antwort des Servers",Toast.LENGTH_SHORT).show();
             }
         }
         finish();
