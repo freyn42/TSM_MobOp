@@ -42,11 +42,10 @@ public class ACFCityPointer extends LinearLayout implements View.OnClickListener
     private TextView tvDistance;
 
     private boolean expanded = false;
-
     private int leftMargin, topMargin;
     private int cityPointerHeight, cityPointerWidth;
-
     private ACFCity city;
+    private static int usageId;
 
     public ACFCityPointer(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -205,8 +204,8 @@ public class ACFCityPointer extends LinearLayout implements View.OnClickListener
 
 
     /***********************************************************************************************
-    * Getter and setter methods for private fields.
-    ***********************************************************************************************/
+     * Getter and setter methods for private fields.
+     ***********************************************************************************************/
     public String getCityName() {
         return cityName;
     }
@@ -292,9 +291,17 @@ public class ACFCityPointer extends LinearLayout implements View.OnClickListener
         this.city = city;
     }
 
+    public static int getUsageId() {
+        return usageId;
+    }
+
+    public static void setUsageId(int usageId) {
+        ACFCityPointer.usageId = usageId;
+    }
+
     /***********************************************************************************************
-    * Event listener methods
-    ***********************************************************************************************/
+     * Event listener methods
+     ***********************************************************************************************/
     @Override
     public void onClick(View v) {
         if (expanded){
@@ -306,12 +313,18 @@ public class ACFCityPointer extends LinearLayout implements View.OnClickListener
             tvCountryName.setVisibility(View.VISIBLE);
             tvContinentName.setVisibility(View.VISIBLE);
         }
+
+//        if ((usageId != 0) && (city.getLocation() != null)){
+//            //Post UsageCity
+//            ACFRestPOSTController postController = new ACFRestPOSTController(context);
+//            boolean result = postController.postUsageLocationCity(usageId, city);
+//        }
     }
 
     @Override
     public boolean onLongClick(View v) {
         Toast.makeText(context, cityName + ", " + countryName + ", " + continentName +
-                        "\nDistance: " + (int) distance + "m", Toast.LENGTH_LONG).show();
+                "\nDistance: " + (int) distance + "m", Toast.LENGTH_LONG).show();
         return true;
     }
 }
