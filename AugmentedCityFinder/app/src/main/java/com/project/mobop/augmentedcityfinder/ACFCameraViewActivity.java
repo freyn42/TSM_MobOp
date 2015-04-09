@@ -47,8 +47,9 @@ public class ACFCameraViewActivity extends Activity implements View.OnClickListe
 
             ACFCityPointer cpTmp;
             for (final ACFCity city : citiesList){
-                cpTmp = new ACFCityPointer(getApplicationContext(), city.getCityName(),
-                        city.getCountryName(), city.getContinentName());
+//                cpTmp = new ACFCityPointer(getApplicationContext(), city.getCityName(),
+//                        city.getCountryName(), city.getContinentName());
+                cpTmp = new ACFCityPointer(getApplicationContext(), city);
                 cpTmp.setDistance(city.getDistance());
                 cpTmp.setVisibility(View.INVISIBLE);
 
@@ -62,7 +63,7 @@ public class ACFCameraViewActivity extends Activity implements View.OnClickListe
             Log.d(TAG, "onServiceDisconnected");
 
             // This is called when the connection with the service has been
-            // unexpectedly disconnected -- that is, its process crashed.
+            // unexpectedly disconnected (i.e. its process crashed).
             mBoundService = null;
         }
     };
@@ -74,46 +75,41 @@ public class ACFCameraViewActivity extends Activity implements View.OnClickListe
 
             if ((intent.getAction() == ACFCameraViewService.ACTION_UPDATE_NOTIFICATION) && (mBoundService != null)){
                 citiesList = mBoundService.getCitiesList();
-                if (intent.getStringExtra(ACFCameraViewService.EXTRA_UPDATE_SOURCE) ==
-                        ACFCameraViewService.EXTRA_LOCATION){
-                    Location location = mBoundService.getLocation();
-                    tv_location.setText("\nLatitude:" + (int) location.getLatitude() +
-                            ", Longitude: " + (int) location.getLongitude() +
-                            ", Distance: " + citiesList.get(0).getDistance());
-                }else if (intent.getStringExtra(ACFCameraViewService.EXTRA_UPDATE_SOURCE) ==
-                        ACFCameraViewService.EXTRA_ORIENTATION){
-                    ACFOrientation orientation = mBoundService.getOrientation();
-                    tv_orientation.setText("Azimuth: " + (int) Math.toDegrees(orientation.getAzimuth()) +
-                            ", Pitch: " + (int) Math.toDegrees(orientation.getPitch()) +
-                            ", Roll: " + (int) Math.toDegrees(orientation.getRoll()) +
-                            "\ndeltaAzimuth to " + citiesList.get(0).getCityName() + ": " +
-                            (int) citiesList.get(0).getDeltaAzimuth());
+                Location location = mBoundService.getLocation();
+                tv_location.setText("\nLatitude:" + (int) location.getLatitude() +
+                        ", Longitude: " + (int) location.getLongitude() +
+                        ", Distance: " + citiesList.get(0).getDistance());
+                ACFOrientation orientation = mBoundService.getOrientation();
+                tv_orientation.setText("Azimuth: " + (int) Math.toDegrees(orientation.getAzimuth()) +
+                        ", Pitch: " + (int) Math.toDegrees(orientation.getPitch()) +
+                        ", Roll: " + (int) Math.toDegrees(orientation.getRoll()) +
+                        "\ndeltaAzimuth to " + citiesList.get(0).getCityName() + ": " +
+                        (int) citiesList.get(0).getDeltaAzimuth());
 
-                    ACFCityPointer cpTmp;
-                    int cityEnum = 0;
-                    int lastTopMargin = foreground.getHeight();
-                    for (ACFCity city : citiesList){
-                        cpTmp = cityPointerList.get(cityEnum);
-                        if (city.isInView()){
-                            cpTmp.setDistance(city.getDistance());
+                ACFCityPointer cpTmp;
+                int cityEnum = 0;
+                int lastTopMargin = foreground.getHeight();
+                for (ACFCity city : citiesList){
+                    cpTmp = cityPointerList.get(cityEnum);
+                    if (city.isInView()){
+                        cpTmp.setDistance(city.getDistance());
 
-                            cpTmp.setLeftMargin(city.getLeftMargin());
+                        cpTmp.setLeftMargin(city.getLeftMargin());
 
-                            int height = cpTmp.getCityPointerHeight();
-                            if ((lastTopMargin - (height)) < 0){
-                                lastTopMargin = foreground.getHeight();
-                            }
-                            int currentTopMargin = lastTopMargin - (height);
-                            cpTmp.setTopMargin(currentTopMargin);
-                            //cpTmp.setTopMargin(300);
-                            lastTopMargin = currentTopMargin;
-
-                            cpTmp.setVisibility(View.VISIBLE);
-                        }else{
-                            cpTmp.setVisibility(View.INVISIBLE);
+                        int height = cpTmp.getCityPointerHeight();
+                        if ((lastTopMargin - (height)) < 0){
+                            lastTopMargin = foreground.getHeight();
                         }
-                        cityEnum++;
+                        int currentTopMargin = lastTopMargin - (height);
+                        cpTmp.setTopMargin(currentTopMargin);
+                        //cpTmp.setTopMargin(300);
+                        lastTopMargin = currentTopMargin;
+
+                        cpTmp.setVisibility(View.VISIBLE);
+                    }else{
+                        cpTmp.setVisibility(View.INVISIBLE);
                     }
+                    cityEnum++;
                 }
             }
         }

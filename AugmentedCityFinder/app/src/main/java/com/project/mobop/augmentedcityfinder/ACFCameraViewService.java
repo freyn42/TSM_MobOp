@@ -165,7 +165,7 @@ public class ACFCameraViewService extends Service implements Observer {
         Log.d(TAG, "registerLocation");
 
         locationController = new ACFLocationController(this);
-        locationController.requestLocationUpdates(15000, 1);
+        locationController.requestLocationUpdates(1000, 1);
         locationObservable = locationController.getLocationListener();
         locationObservable.addObserver(this);
     }
@@ -238,53 +238,6 @@ public class ACFCameraViewService extends Service implements Observer {
         }
 
         Intent intent = new Intent(ACTION_UPDATE_NOTIFICATION);
-        intent.putExtra(EXTRA_UPDATE_SOURCE, EXTRA_ORIENTATION);
-        sendMessage(intent);
-    }
-
-    private void orientationCalculations(){
-        if (location != null){
-            for (ACFCity city : citiesList){
-                double bearing = location.bearingTo(city.getLocation());
-                if (bearing > 180){
-                    bearing = bearing - 360;
-                }
-                double azimuth = Math.toDegrees(orientation.getAzimuth());
-                double deltaAzimuth = azimuth - bearing;
-                city.setDeltaAzimuth(deltaAzimuth);
-                city.setDeltaPitch(0);
-
-                if (Math.abs(deltaAzimuth) < (horizontalViewAngle / 2)){
-                    city.setInView(true);
-                }else{
-                    city.setInView(false);
-                }
-
-                if (city.isInView()){
-                    int leftMargin = (int) ((screenWidthPixel / 2) +
-                            (horizontalPixelDegree * ((int) -city.getDeltaAzimuth())) - 25);
-                    city.setLeftMargin(leftMargin);
-
-                    int topMargin = (int) ((screenHeightPixel / 2) - 25);
-                    city.setTopMargin(topMargin);
-                }
-            }
-        }
-
-        Intent intent = new Intent(ACTION_UPDATE_NOTIFICATION);
-        intent.putExtra(EXTRA_UPDATE_SOURCE, EXTRA_ORIENTATION);
-        sendMessage(intent);
-    }
-
-    private void locationCalculations(){
-        for (ACFCity city : citiesList){
-            if (location != null){
-                city.setDistance(location.distanceTo(city.getLocation()));
-            }
-        }
-
-        Intent intent = new Intent(ACTION_UPDATE_NOTIFICATION);
-        intent.putExtra(EXTRA_UPDATE_SOURCE, EXTRA_LOCATION);
         sendMessage(intent);
     }
 
