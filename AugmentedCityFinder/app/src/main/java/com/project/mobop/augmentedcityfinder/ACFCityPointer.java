@@ -83,6 +83,7 @@ public class ACFCityPointer extends LinearLayout implements View.OnClickListener
         this.cityName = city.getCityName();
         this.countryName = city.getCountryName();
         this.continentName = city.getContinentName();
+        this.distance = city.getDistance();
 
         setOnClickListener(this);
         setOnLongClickListener(this);

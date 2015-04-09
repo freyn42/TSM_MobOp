@@ -1,6 +1,8 @@
 package com.project.mobop.augmentedcityfinder;
 
+import android.app.Activity;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
@@ -9,20 +11,19 @@ import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 public class ACFCameraViewService extends Service implements Observer {
-
     private final String TAG = "ACFCameraViewService";
 
     static final String ACTION_UPDATE_NOTIFICATION = "update-notification";
-    static final String EXTRA_UPDATE_SOURCE = "update-source";
-    static final String EXTRA_ORIENTATION = "orientation";
-    static final String EXTRA_LOCATION = "location";
 
     private IBinder mIBinder = new ACFCameraViewBinder();
 
@@ -35,13 +36,15 @@ public class ACFCameraViewService extends Service implements Observer {
     private Location location;
     private ACFOrientation orientation;
 
-    private List<ACFCity> citiesList;
+    private List<ACFCity> citiesList = new ArrayList<>();
+
+    private List<ACFCityPointer> cityPointerList = new ArrayList<>();
+    private List<ACFCityPointer> visibleCityPointerList = new ArrayList<>();
 
     private double screenWidthMillimeter, screenHeightMillimeter;
     private int screenWidthPixel, screenHeightPixel;
     private int horizontalPixelDegree, verticalPixelDegree;
     private double horizontalViewAngle, verticalViewAngle;
-    private double density;
     private final double DISTANCE_TO_VIEWER = 300; // Millimeter
 
     private final String PREFS_LAST_KNOWN_LOCATION = "LastKnownLocation";
@@ -96,7 +99,7 @@ public class ACFCameraViewService extends Service implements Observer {
                 ", screen height: " + screenHeightMillimeter);
 
         // Calculating viewing angle of the camera from size of the screen, distance to user and density of the display.
-        density = getApplicationContext().getResources().getDisplayMetrics().density;
+        float density = getApplicationContext().getResources().getDisplayMetrics().density;
         horizontalViewAngle = density * Math.toDegrees(2 * Math.atan2(screenWidthMillimeter / 2, DISTANCE_TO_VIEWER));
         verticalViewAngle = density * Math.toDegrees(2 * Math.atan2(screenHeightMillimeter / 2, DISTANCE_TO_VIEWER));
         Log.d(TAG, "horizontalViewAngle: " + horizontalViewAngle +
@@ -186,8 +189,6 @@ public class ACFCameraViewService extends Service implements Observer {
 
     @Override
     public void update(Observable observable, Object data) {
- //       Log.d(TAG, "Observable update - " + observable + " - " + data);
-
         if (observable == orientationObservable){
             orientation = (ACFOrientation) data;
             if (Math.abs(oldAzimuth - orientation.getAzimuth()) < ANGLE_PRECISION){
@@ -204,7 +205,51 @@ public class ACFCameraViewService extends Service implements Observer {
 
     private void positionCalculations(){
         if (location != null){
+            ACFCity cityTmp;
+            for (ACFCityPointer cityPointer : cityPointerList) {
+                cityTmp = cityPointer.getCity();
+
+                // Update distance to city
+                cityTmp.setDistance(location.distanceTo(cityTmp.getLocation()));
+
+                // Calculate orientation to city
+                double bearing = location.bearingTo(cityTmp.getLocation());
+                if (bearing > 180){
+                    bearing = bearing - 360;
+                }
+                double azimuth = Math.toDegrees(orientation.getAzimuth());
+                double deltaAzimuth = azimuth - bearing;
+                cityTmp.setDeltaAzimuth(deltaAzimuth);
+                cityTmp.setDeltaPitch(0);
+
+                if (Math.abs(deltaAzimuth) < ((horizontalViewAngle / 2) + cityPointer.getCityPointerWidth())){
+                    if (cityTmp.isInView()){
+
+                    }else {
+                        visibleCityPointerList.add(cityPointer);
+                        int topMargin = (int) ((screenHeightPixel / 2) - 25);
+                        cityTmp.setTopMargin(topMargin);
+                    }
+                    int leftMargin = (int) ((screenWidthPixel / 2) +
+                            (horizontalPixelDegree * ((int) -cityTmp.getDeltaAzimuth())) - 25);
+                    cityTmp.setLeftMargin(leftMargin);
+                    cityTmp.setInView(true);
+                }else{
+                    if (cityTmp.isInView()){
+                        visibleCityPointerList.remove(cityPointer);
+                        cityTmp.setInView(false);
+                    }
+                }
+
+                // Update city pointer position
+                if (cityTmp.isInView()){
+
+
+                }
+
+            }
             for (ACFCity city : citiesList){
+
                 // Update distance to city
                 city.setDistance(location.distanceTo(city.getLocation()));
 
@@ -242,26 +287,27 @@ public class ACFCameraViewService extends Service implements Observer {
     }
 
     private void sendMessage(Intent intent){
-//        Log.d(TAG, "sendMessage");
-
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     public Location getLocation() {
-//        Log.d(TAG, "getLocation");
-
         return location;
     }
 
     public ACFOrientation getOrientation(){
-//        Log.d(TAG, "getOrientation");
-
         return orientation;
     }
 
     public List<ACFCity> getCitiesList() {
-//        Log.d(TAG, "getCitiesList");
-
         return citiesList;
+    }
+
+    public void setCityPointerList(List<ACFCityPointer> cityPointerList) {
+        this.cityPointerList = cityPointerList;
+    }
+
+
+    public List<ACFCityPointer> getVisibleCityPointerList() {
+        return visibleCityPointerList;
     }
 }
