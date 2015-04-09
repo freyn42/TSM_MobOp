@@ -17,9 +17,6 @@ import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
 
-    private ACFLocationController locationController;
-    private ACFOrientationController orientationController;
-
     private PlaceholderFragment mainFragment;
 
     @Override
@@ -33,15 +30,6 @@ public class MainActivity extends ActionBarActivity {
                     .add(R.id.container, mainFragment)
                     .commit();
         }
-
-        locationController = new ACFLocationController(this);
-        orientationController = new ACFOrientationController(this);
-
-        ACFCitiesDatabaseController dbController = new ACFCitiesDatabaseController(this);
-
-        List<ACFCity> cities = dbController.getAllCities();
-        List<ACFCity> visibleCities = dbController.getAllVisibleCities();
-
     }
 
     public PlaceholderFragment getMainFragment(){
@@ -51,38 +39,13 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //locationController.requestLocationUpdates(15000, 1);
-        //orientationController.registerListener();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        //locationController.unregisterListener();
-        //orientationController.unregisterListener();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     /**
      * A placeholder fragment containing a simple view.
