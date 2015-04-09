@@ -2,67 +2,39 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\Nils\Documents\GitHub\TSM_MobOp\AugmentedCityFinder\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\libs\internal_impl-21.0.3.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
-        <dex dex="C:\Users\Nils\Documents\GitHub\TSM_MobOp\AugmentedCityFinder\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.3-1cf555bcdb93c1dd9555c77fec875e69629bfd31.jar" />
-    </item>
-    <item
-        jar="C:\Users\Nils\Documents\GitHub\TSM_MobOp\AugmentedCityFinder\app\libs\gson-2.3.1.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="ecb6e1f8e4b0e84c4b886c2f14a1500caf309757">
-        <dex dex="C:\Users\Nils\Documents\GitHub\TSM_MobOp\AugmentedCityFinder\app\build\intermediates\pre-dexed\debug\gson-2.3.1-3d2726e99afd1b697406530af02fca54a14c0a43.jar" />
-    </item>
-    <item
-        jar="C:\Users\Nils\Documents\Android\TSM_MobOp_Test\AugmentedCityFinder_AzimuthChange\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\21.0.3\classes.jar"
+        jar="C:\Documents\ZHAW\TSM_MobOp\AugmentedCityFinder\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\21.0.3\classes.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
-        <dex dex="C:\Users\Nils\Documents\Android\TSM_MobOp_Test\AugmentedCityFinder_AzimuthChange\app\build\intermediates\pre-dexed\debug\classes-472e623c2491e4e57b413ef52fbd54cc8ca70827.jar" />
+        <dex dex="C:\Documents\ZHAW\TSM_MobOp\AugmentedCityFinder\app\build\intermediates\pre-dexed\release\classes-6cea015946c8280f1e15a01b4928f86446523aa5.jar" />
     </item>
     <item
-        jar="C:\Users\Nils\Documents\Android\TSM_MobOp_Test\AugmentedCityFinder_AzimuthChange\app\libs\gson-2.3.1.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="ecb6e1f8e4b0e84c4b886c2f14a1500caf309757">
-        <dex dex="C:\Users\Nils\Documents\Android\TSM_MobOp_Test\AugmentedCityFinder_AzimuthChange\app\build\intermediates\pre-dexed\debug\gson-2.3.1-041f32b78c7460f712ca16c9606e184c9e5613df.jar" />
-    </item>
-    <item
-        jar="C:\Users\Nils\Documents\GitHub\TSM_MobOp\AugmentedCityFinder\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
-        <dex dex="C:\Users\Nils\Documents\GitHub\TSM_MobOp\AugmentedCityFinder\app\build\intermediates\pre-dexed\debug\classes-d5afb2864c4f85e973902f9c40206bca9a7e7e5f.jar" />
-    </item>
-    <item
-        jar="C:\Users\Nils\Documents\GitHub\TSM_MobOp\AugmentedCityFinder\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\21.0.3\classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
-        <dex dex="C:\Users\Nils\Documents\GitHub\TSM_MobOp\AugmentedCityFinder\app\build\intermediates\pre-dexed\debug\classes-9b7cd18f385409fdf6a967f3891451afa97d933f.jar" />
-    </item>
-    <item
-        jar="C:\Users\Nils\Documents\Android\TSM_MobOp_Test\AugmentedCityFinder_AzimuthChange\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\classes.jar"
-        jumboMode="false"
-        revision="21.1.2"
-        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
-        <dex dex="C:\Users\Nils\Documents\Android\TSM_MobOp_Test\AugmentedCityFinder_AzimuthChange\app\build\intermediates\pre-dexed\debug\classes-52fd99b63edb0c7e05ad59d95c18ca362851aa04.jar" />
-    </item>
-    <item
-        jar="C:\Users\Nils\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\21.0.3\support-annotations-21.0.3.jar"
+        jar="C:\Android\SDK\extras\android\m2repository\com\android\support\support-annotations\21.0.3\support-annotations-21.0.3.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
-        <dex dex="C:\Users\Nils\Documents\Android\TSM_MobOp_Test\AugmentedCityFinder_AzimuthChange\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.3-7411890620e377ceaab39483e2c7556fc6ed8ec0.jar" />
+        <dex dex="C:\Documents\ZHAW\TSM_MobOp\AugmentedCityFinder\app\build\intermediates\pre-dexed\release\support-annotations-21.0.3-9e355269ebee241e3e90225f6be873fa271a2207.jar" />
     </item>
     <item
-        jar="C:\Users\Nils\Documents\Android\TSM_MobOp_Test\AugmentedCityFinder_AzimuthChange\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\libs\internal_impl-21.0.3.jar"
+        jar="C:\Documents\ZHAW\TSM_MobOp\AugmentedCityFinder\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\libs\internal_impl-21.0.3.jar"
         jumboMode="false"
         revision="21.1.2"
         sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
-        <dex dex="C:\Users\Nils\Documents\Android\TSM_MobOp_Test\AugmentedCityFinder_AzimuthChange\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.3-1c223fd6d7f215c2b8aed49b0be37ba86605be8f.jar" />
+        <dex dex="C:\Documents\ZHAW\TSM_MobOp\AugmentedCityFinder\app\build\intermediates\pre-dexed\release\internal_impl-21.0.3-c8246cf9da33e6552645fff7c42d5ac31a7c70ed.jar" />
+    </item>
+    <item
+        jar="C:\Documents\ZHAW\TSM_MobOp\AugmentedCityFinder\app\libs\gson-2.3.1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="ecb6e1f8e4b0e84c4b886c2f14a1500caf309757">
+        <dex dex="C:\Documents\ZHAW\TSM_MobOp\AugmentedCityFinder\app\build\intermediates\pre-dexed\release\gson-2.3.1-a1cacb48683a3f9bc0f8a698ea3fe076cafea8a7.jar" />
+    </item>
+    <item
+        jar="C:\Documents\ZHAW\TSM_MobOp\AugmentedCityFinder\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="C:\Documents\ZHAW\TSM_MobOp\AugmentedCityFinder\app\build\intermediates\pre-dexed\release\classes-1a8913cde4b3c1353329ef57da0cab079312a811.jar" />
     </item>
 
 </items>
