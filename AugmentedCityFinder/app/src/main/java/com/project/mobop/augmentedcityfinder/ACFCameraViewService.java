@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,8 +50,8 @@ public class ACFCameraViewService extends Service implements Observer {
 
     private final double ANGLE_PRECISION = 0.022;
 
-    private double oldAzimuth = 0;
-    private boolean locationFixed = false;
+
+    double oldAzimuth = 0;
 
     public ACFCameraViewService() {
     }
@@ -71,10 +70,6 @@ public class ACFCameraViewService extends Service implements Observer {
         Log.d(TAG, "onCreate");
 
         super.onCreate();
-
-        if (!locationFixed){
-            Toast.makeText(getApplicationContext(), "Location not yet fixed! \nUsing last known location.", Toast.LENGTH_LONG).show();
-        }
 
         SharedPreferences prefs = getSharedPreferences(PREFS_LAST_KNOWN_LOCATION, 0);
         if (prefs.contains(PREFS_LATITUDE)){
@@ -201,14 +196,6 @@ public class ACFCameraViewService extends Service implements Observer {
             }
         }else if (observable == locationObservable){
             location = (Location) data;
-            if ((!locationFixed) &&(location != null)){
-//                //Post UsageLocation
-//                ACFRestPOSTController postController = new ACFRestPOSTController(this);
-//                int usageId = postController.postUsageLocation(location);
-//                ACFCityPointer.setUsageId(usageId);
-//                Toast.makeText(getApplicationContext(), "Location fixed!", Toast.LENGTH_LONG).show();
-                locationFixed = true;
-            }
         }
         positionCalculations();
     }
